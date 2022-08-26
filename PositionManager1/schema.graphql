@@ -1,0 +1,5 @@
+type CreateLoanEntity @entity {
+  id: ID!
+  tokenId: BigInt!
+  pool: Bytes! # address
+}

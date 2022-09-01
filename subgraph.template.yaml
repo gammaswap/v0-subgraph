@@ -5,10 +5,10 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: PositionManager
-    network: mainnet 
+    network: {{network}} 
     source:
       abi: PositionManager
-      address: "0x19cEcCd6942ad38562Ee10bAfd44776ceB67e923"
+      address: "{{PositionManager}}"
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

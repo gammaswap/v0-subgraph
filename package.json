@@ -1,7 +1,7 @@
 {
   "name": "position-manager",
   "version": "1.0.0",
-  "license": "GNU",
+  "license": "GPL-3.0",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",

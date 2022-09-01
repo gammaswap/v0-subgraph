@@ -1,4 +1,4 @@
-type CreateLoanEntity @entity {
+type Loan @entity {
   id: ID!
   pool: Bytes! # address
   tokenId: BigInt!

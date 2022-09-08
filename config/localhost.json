@@ -1,5 +1,7 @@
 {
     "network": "mainnet",
-    "PositionManager": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+    "PositionManager": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
+    "GammaPoolFactory": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+    "GammaPool": "0x7e02a294D4dABfcaE99F872F05014261a4d2F047",
     "PositionManager-start-block": 1101010
 }

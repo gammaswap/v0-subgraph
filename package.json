@@ -5,12 +5,12 @@
   "scripts": {
     "codegen": "yarn prepare && graph codegen",
     "build": "graph build",
-    "create": "graph create PositionManager --node https://api.thegraph.com/deploy/",
-    "create-local": "graph create PositionManager --node http://127.0.0.1:8020",
+    "create": "graph create GammaSwap --node https://api.thegraph.com/deploy/",
+    "create-local": "graph create GammaSwap --node http://127.0.0.1:8020",
     "prepare": "mustache config/localhost.json subgraph.template.yaml > subgraph.yaml",
-    "deploy": "graph deploy PositionManager --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
-    "deploy-local": "graph deploy PositionManager --ipfs http://127.0.0.1:5001 --node http://127.0.0.1:8020",
-    "remove-local": "graph remove --node http://127.0.0.1:8020/ PositionManager",
+    "deploy": "graph deploy GammaSwap --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "deploy-local": "graph deploy GammaSwap --ipfs http://127.0.0.1:5001 --node http://127.0.0.1:8020",
+    "remove-local": "graph remove --node http://127.0.0.1:8020/ GammaSwap",
     "test": "graph test"
   },
   "dependencies": {

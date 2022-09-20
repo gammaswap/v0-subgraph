@@ -83,6 +83,21 @@ type PoolCreated @entity {
   count: BigInt!
 }
 
+type Approval @entity {
+  id: ID!
+  owner: Bytes! # address
+  spender: Bytes! # address
+  value: BigInt!
+}
+
+type Deposit @entity {
+  id: ID!
+  caller: Bytes! # address
+  from: Bytes! # address
+  assets: BigInt!
+  shares: BigInt!
+}
+
 type Transfer @entity {
   id: ID!
   from: Bytes! # address
@@ -90,9 +105,11 @@ type Transfer @entity {
   value: BigInt!
 }
 
-type Approval @entity {
+type Withdraw @entity {
   id: ID!
-  owner: Bytes! # address
-  spender: Bytes! # address
-  value: BigInt!
+  caller: Bytes! # address
+  to: Bytes! # address
+  from: Bytes! # address
+  assets: BigInt!
+  shares: BigInt!
 }

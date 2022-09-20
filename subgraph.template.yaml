@@ -8,7 +8,7 @@ dataSources:
     network: {{network}} 
     source:
       abi: PositionManager
-      address: "{{PositionManager}}"
+      address: '{{PositionManager}}'
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -57,7 +57,7 @@ dataSources:
     network: {{network}} 
     source:
       abi: GammaPoolFactory
-      address: "{{GammaPoolFactory}}"
+      address: '{{GammaPoolFactory}}'
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -71,3 +71,28 @@ dataSources:
         - event: PoolCreated(indexed address,indexed address,indexed uint24,address,uint256)
           handler: handlePoolCreated
       file: ./src/mappings/GammaPoolFactory.ts
+templates:
+  - name: ShortStrategy
+    kind: ethereum/contract
+    network: {{network}}
+    source:
+      abi: ShortStrategy
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Deposit
+        - Transfer
+        - Withdraw
+      abis:
+        - name: ShortStrategy
+          file: ./abis/ShortStrategy.json
+      eventHandlers:
+        - event: Deposit(indexed address,indexed address,uint256,uint256)
+          handler: handleDeposit
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleWithdraw
+      file: ./src/mappings/ShortStrategy.ts

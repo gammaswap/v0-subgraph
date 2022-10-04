@@ -1,7 +1,7 @@
 {
     "network": "mainnet",
-    "PositionManager": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-    "GammaPoolFactory": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
-    "GammaPool": "0x7e02a294D4dABfcaE99F872F05014261a4d2F047",
+    "PositionManager": "0x922D6956C99E12DFeB3224DEA977D0939758A1Fe",
+    "GammaPoolFactory": "0x67d269191c92Caf3cD7723F116c85e6E9bf55933",
+    "GammaPool": "0x6EcC36481d9Cbd8e9547886713387fa2ec7D1218",
     "PositionManager-start-block": 1101010
 }

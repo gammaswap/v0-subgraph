@@ -4,55 +4,6 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: PositionManager
-    network: {{network}} 
-    source:
-      abi: PositionManager
-      address: '{{PositionManager}}'
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - DepositNoPull
-        - WithdrawNoPull
-        - DepositReserves
-        - WithdrawReserves
-        - CreateLoan
-        - BorrowLiquidity
-        - RepayLiquidity
-        - IncreaseCollateral
-        - DecreaseCollateral
-        - RebalanceCollateral
-        - RebalanceCollateralWithLiquidity
-      abis:
-        - name: PositionManager
-          file: ./abis/PositionManager.json
-      eventHandlers:
-        - event: DepositNoPull(indexed address,uint256)
-          handler: handleDepositNoPull
-        - event: WithdrawNoPull(indexed address,uint256)
-          handler: handleWithdrawNoPull
-        - event: DepositReserves(indexed address,uint256,uint256)
-          handler: handleDepositReserves
-        - event: WithdrawReserves(indexed address,uint256,uint256)
-          handler: handleWithdrawReserves
-        - event: CreateLoan(indexed address,uint256)
-          handler: handleCreateLoan
-        - event: BorrowLiquidity(indexed address,uint256,uint256)
-          handler: handleBorrowLiquidity
-        - event: RepayLiquidity(indexed address,uint256,uint256,uint256,uint256)
-          handler: handleRepayLiquidity
-        - event: IncreaseCollateral(indexed address,uint256,uint256)
-          handler: handleIncreaseCollateral
-        - event: DecreaseCollateral(indexed address,uint256,uint256)
-          handler: handleDecreaseCollateral
-        - event: RebalanceCollateral(indexed address,uint256,uint256)
-          handler: handleRebalanceCollateral
-        - event: RebalanceCollateralWithLiquidity(indexed address,uint256,uint256)
-          handler: handleRebalanceCollateralWithLiquidity
-      file: ./src/mappings/PositionManager.ts
-  - kind: ethereum/contract
     name: GammaPoolFactory
     network: {{network}} 
     source:
@@ -62,37 +13,39 @@ dataSources:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
+      file: ./src/mappings/GammaPoolFactory.ts
       entities:
-        - PoolCreated
+        - Pool
+        - Protocol
+        - User
       abis:
         - name: GammaPoolFactory
           file: ./abis/GammaPoolFactory.json
       eventHandlers:
         - event: PoolCreated(indexed address,indexed address,indexed uint24,address,uint256)
           handler: handlePoolCreated
-      file: ./src/mappings/GammaPoolFactory.ts
 templates:
-  - name: ShortStrategy
-    kind: ethereum/contract
+  - kind: ethereum/contract
+    name: GammaPool
     network: {{network}}
     source:
-      abi: ShortStrategy
+      abi: GammaPool
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
-      entities:
-        - Deposit
-        - Transfer
-        - Withdraw
-      abis:
-        - name: ShortStrategy
-          file: ./abis/ShortStrategy.json
-      eventHandlers:
-        - event: Deposit(indexed address,indexed address,uint256,uint256)
-          handler: handleDeposit
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-        - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
-          handler: handleWithdraw
       file: ./src/mappings/ShortStrategy.ts
+      entities:
+        - Pool
+        - Protocol
+        - Loan
+      abis:
+        - name: GammaPool
+          file: ./abis/GammaPool.json
+      eventHandlers:
+        - event: PoolUpdated(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handlePoolUpdated
+        - event: LoanCreated(indexed address,uint256)
+          handler: handleLoanCreated
+        - event: LoanUpdated(indexed uint256,uint256[],uint256,uint256,uint256,uint256)
+          handler: handleLoanUpdated

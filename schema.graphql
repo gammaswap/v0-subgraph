@@ -1,115 +1,48 @@
+# GS Factory
+type Pool @entity {
+  id: ID!
+  protocol: Protocol!
+  cfmm: Bytes!
+  tokenBalance: [BigInt!]!
+  lpTokenBalance: BigInt!
+  lpTokensBorrowedPlusInterest: BigInt!
+  lpTokenTotal: BigInt!
+  borrowedInvariant: BigInt!
+  lpInvariant: BigInt!
+  totalVariant: BigInt!
+  borrowRate: BigInt!
+  accFeeIndex: BigInt!
+  lastFeeIndex: BigInt!
+  lastCFMMFeeIndex: BigInt!
+  lastCFMMInvariant: BigInt!
+  lastCFMMTotalSupply: BigInt!
+  lastBlockNumber: BigInt!
+  totalSupply: BigInt!
+}
+
+# Protocol
+type Protocol @entity {
+  id: ID!
+  name: String!
+  address: Bytes!
+  shortStrategyAddress: Bytes!
+  longStrategyAddress: Bytes!
+}
+
 type Loan @entity {
   id: ID!
-  pool: Bytes! # address
-  tokenId: BigInt!
+  poolId: Bytes!
+  tokensHeld: [BigInt!]!
+  heldLiquidity: BigInt!
+  lpTokens: BigInt!
+  rateIndex: BigInt!
+  blockNumber: BigInt!
 }
 
-type RebalanceCollateral @entity {
+# User
+type User @entity {
   id: ID!
-  pool: Bytes! # address
-  tokenId: BigInt!
-  tokensHeldLen: BigInt!
-}
-
-type DepositNoPull @entity {
-  id: ID!
-  pool: Bytes! # address
-  shares: BigInt!
-}
-
-type WithdrawNoPull @entity {
-  id: ID!
-  pool: Bytes! # address
-  assets: BigInt!
-}
-
-type DepositReserves @entity {
-  id: ID!
-  pool: Bytes! # address
-  reservesLen: BigInt!
-  shares: BigInt!
-}
-
-type WithdrawReserves @entity {
-  id: ID!
-  pool: Bytes! # address
-  reservesLen: BigInt!
-  assets: BigInt!
-}
-
-type BorrowLiquidity @entity {
-  id: ID!
-  pool: Bytes! # address
-  tokenId: BigInt!
-  amountsLen: BigInt!
-}
-
-type RepayLiquidity @entity {
-  id: ID!
-  pool: Bytes! # address
-  tokenId: BigInt!
-  liquidityPaid: BigInt!
-  lpTokensPaid: BigInt!
-  amountsLen: BigInt!
-}
-
-type IncreaseCollateral @entity {
-  id: ID!
-  pool: Bytes! # address
-  tokenId: BigInt!
-  tokensHeldLen: BigInt!
-}
-
-type DecreaseCollateral @entity {
-  id: ID!
-  pool: Bytes! # address
-  tokenId: BigInt!
-  tokensHeldLen: BigInt!
-}
-
-type RebalanceCollateralWithLiquidity @entity {
-  id: ID!
-  pool: Bytes! # address
-  tokenId: BigInt!
-  tokensHeldLen: BigInt!
-}
-
-type PoolCreated @entity {
-  id: ID!
-  pool: Bytes! # address
-  cfmm: Bytes! # address
-  protocolId: BigInt!
-  protocol: Bytes! # address
-  count: BigInt!
-}
-
-type Approval @entity {
-  id: ID!
-  owner: Bytes! # address
-  spender: Bytes! # address
-  value: BigInt!
-}
-
-type Deposit @entity {
-  id: ID!
-  caller: Bytes! # address
-  from: Bytes! # address
-  assets: BigInt!
-  shares: BigInt!
-}
-
-type Transfer @entity {
-  id: ID!
-  from: Bytes! # address
-  to: Bytes! # address
-  value: BigInt!
-}
-
-type Withdraw @entity {
-  id: ID!
-  caller: Bytes! # address
-  to: Bytes! # address
-  from: Bytes! # address
-  assets: BigInt!
-  shares: BigInt!
+  address: Bytes!
+  depositedPools: [Pool!]!
+  loans: [Loan!]!
 }

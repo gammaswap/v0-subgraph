@@ -1,0 +1,48 @@
+# GS Factory
+type Pool @entity {
+  id: ID!
+  protocol: Protocol!
+  cfmm: Bytes!
+  tokenBalance: [BigInt!]!
+  lpTokenBalance: BigInt!
+  lpTokensBorrowedPlusInterest: BigInt!
+  lpTokenTotal: BigInt!
+  borrowedInvariant: BigInt!
+  lpInvariant: BigInt!
+  totalVariant: BigInt!
+  borrowRate: BigInt!
+  accFeeIndex: BigInt!
+  lastFeeIndex: BigInt!
+  lastCFMMFeeIndex: BigInt!
+  lastCFMMInvariant: BigInt!
+  lastCFMMTotalSupply: BigInt!
+  lastBlockNumber: BigInt!
+  totalSupply: BigInt!
+}
+
+# Protocol
+type Protocol @entity {
+  id: ID!
+  name: String!
+  address: Bytes!
+  shortStrategyAddress: Bytes!
+  longStrategyAddress: Bytes!
+}
+
+type Loan @entity {
+  id: ID!
+  poolId: Bytes!
+  tokensHeld: [BigInt!]!
+  heldLiquidity: BigInt!
+  lpTokens: BigInt!
+  rateIndex: BigInt!
+  blockNumber: BigInt!
+}
+
+# User
+type User @entity {
+  id: ID!
+  address: Bytes!
+  depositedPools: [Pool!]!
+  loans: [Loan!]!
+}

@@ -1,0 +1,51 @@
+specVersion: 0.0.4
+description: GammaSwap is an oracle-free volatility DEX for automated market Makers.
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: GammaPoolFactory
+    network: {{network}} 
+    source:
+      abi: GammaPoolFactory
+      address: '{{GammaPoolFactory}}'
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/GammaPoolFactory.ts
+      entities:
+        - Pool
+        - Protocol
+        - User
+      abis:
+        - name: GammaPoolFactory
+          file: ./abis/GammaPoolFactory.json
+      eventHandlers:
+        - event: PoolCreated(indexed address,indexed address,indexed uint24,address,uint256)
+          handler: handlePoolCreated
+templates:
+  - kind: ethereum/contract
+    name: GammaPool
+    network: {{network}}
+    source:
+      abi: GammaPool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/ShortStrategy.ts
+      entities:
+        - Pool
+        - Protocol
+        - Loan
+      abis:
+        - name: GammaPool
+          file: ./abis/GammaPool.json
+      eventHandlers:
+        - event: PoolUpdated(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handlePoolUpdated
+        - event: LoanCreated(indexed address,uint256)
+          handler: handleLoanCreated
+        - event: LoanUpdated(indexed uint256,uint256[],uint256,uint256,uint256,uint256)
+          handler: handleLoanUpdated

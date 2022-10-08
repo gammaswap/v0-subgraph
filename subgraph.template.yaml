@@ -15,12 +15,14 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/GammaPoolFactory.ts
       entities:
-        - Pool
-        - Protocol
-        - User
+        - PoolCreated
       abis:
         - name: GammaPoolFactory
           file: ./abis/GammaPoolFactory.json
+        - name: GammaPool
+          file: ./abis/GammaPool.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: PoolCreated(indexed address,indexed address,indexed uint24,address,uint256)
           handler: handlePoolCreated
@@ -36,12 +38,14 @@ templates:
       language: wasm/assemblyscript
       file: ./src/mappings/ShortStrategy.ts
       entities:
-        - Pool
-        - Protocol
-        - Loan
+        - PoolUpdated
+        - LoanCreated
+        - LoanUpdated
       abis:
         - name: GammaPool
           file: ./abis/GammaPool.json
+        - name: GammaPoolFactory
+          file: ./abis/GammaPoolFactory.json
       eventHandlers:
         - event: PoolUpdated(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handlePoolUpdated

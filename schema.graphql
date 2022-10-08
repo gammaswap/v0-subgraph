@@ -1,32 +1,59 @@
-# GS Factory
+type User @entity {
+  id: ID!
+  address: Bytes!
+  depositedPools: [Bytes!]!
+  loans: [BigInt!]!
+}
+
+# pool events
 type Pool @entity {
   id: ID!
-  protocol: Protocol!
-  cfmm: Bytes!
-  tokenBalance: [BigInt!]!
+  address: Bytes! # address
+  cfmm: Bytes! # address
+  protocolId: BigInt!
+  protocol: Bytes! # address
+  count: BigInt!
+  tokenBalances: [BigInt!]!
   lpTokenBalance: BigInt!
-  lpTokensBorrowedPlusInterest: BigInt!
+  lpTokenBorrowed: BigInt!
+  lpTokenBorrowedPlusInterest: BigInt!
   lpTokenTotal: BigInt!
-  borrowedInvariant: BigInt!
-  lpInvariant: BigInt!
-  totalVariant: BigInt!
+  
   borrowRate: BigInt!
   accFeeIndex: BigInt!
+  
   lastFeeIndex: BigInt!
   lastCFMMFeeIndex: BigInt!
   lastCFMMInvariant: BigInt!
   lastCFMMTotalSupply: BigInt!
   lastBlockNumber: BigInt!
+  
   totalSupply: BigInt!
 }
 
-# Protocol
-type Protocol @entity {
+type PoolData @entity {
   id: ID!
-  name: String!
-  address: Bytes!
-  shortStrategyAddress: Bytes!
-  longStrategyAddress: Bytes!
+  address: Bytes! # address
+  cfmm: Bytes! # address
+  protocolId: BigInt!
+  protocol: Bytes! # address
+  count: BigInt!
+  tokenBalance: [BigInt!]!
+  lpTokenBalance: BigInt!
+  lpTokenBorrowed: BigInt!
+  lpTokensBorrowedPlusInterest: BigInt!
+  lpTokensTotal: BigInt!
+  
+  borrowRate: BigInt!
+  accFeeIndex: BigInt!
+  
+  lastFeeIndex: BigInt!
+  lastCFMMFeeIndex: BigInt!
+  lastCFMMInvariant: BigInt!
+  lastCFMMTotalSupply: BigInt!
+  lastBlockNumber: BigInt!
+  
+  totalSupply: BigInt!  
 }
 
 type Loan @entity {
@@ -34,15 +61,19 @@ type Loan @entity {
   poolId: Bytes!
   tokensHeld: [BigInt!]!
   heldLiquidity: BigInt!
+  liquidity: BigInt!
   lpTokens: BigInt!
-  rateIndex: BigInt!
+  rateIndex: BigInt! # accFeeIndex
   blockNumber: BigInt!
 }
 
-# User
-type User @entity {
+type LoanData @entity {
   id: ID!
-  address: Bytes!
-  depositedPools: [Pool!]!
-  loans: [Loan!]!
+  poolId: Bytes!
+  tokensHeld: [BigInt!]!
+  heldLiquidity: BigInt!
+  liquidity: BigInt!
+  lpTokens: BigInt!
+  rateIndex: BigInt! # accFeeIndex
+  blockNumber: BigInt!
 }

@@ -8,52 +8,25 @@ type User @entity {
 # pool events
 type Pool @entity {
   id: ID!
-  address: Bytes! # address
-  cfmm: Bytes! # address
+  address: Bytes!
+  cfmm: Bytes!
   protocolId: BigInt!
-  protocol: Bytes! # address
+  protocol: Bytes!
   count: BigInt!
-  tokenBalances: [BigInt!]!
-  lpTokenBalance: BigInt!
-  lpTokenBorrowed: BigInt!
-  lpTokenBorrowedPlusInterest: BigInt!
-  lpTokenTotal: BigInt!
-  
-  borrowRate: BigInt!
-  accFeeIndex: BigInt!
-  
-  lastFeeIndex: BigInt!
-  lastCFMMFeeIndex: BigInt!
-  lastCFMMInvariant: BigInt!
-  lastCFMMTotalSupply: BigInt!
-  lastBlockNumber: BigInt!
-  
-  totalSupply: BigInt!
 }
 
 type PoolData @entity {
   id: ID!
   address: Bytes! # address
-  cfmm: Bytes! # address
-  protocolId: BigInt!
-  protocol: Bytes! # address
-  count: BigInt!
-  tokenBalance: [BigInt!]!
-  lpTokenBalance: BigInt!
-  lpTokenBorrowed: BigInt!
-  lpTokensBorrowedPlusInterest: BigInt!
-  lpTokensTotal: BigInt!
-  
-  borrowRate: BigInt!
-  accFeeIndex: BigInt!
-  
-  lastFeeIndex: BigInt!
-  lastCFMMFeeIndex: BigInt!
-  lastCFMMInvariant: BigInt!
-  lastCFMMTotalSupply: BigInt!
-  lastBlockNumber: BigInt!
-  
-  totalSupply: BigInt!  
+  tokenBalances: [BigDecimal!]!
+  lpTokenBalance: BigDecimal!
+  lpTokenBorrowed: BigDecimal!
+  lpTokenBorrowedPlusInterest: BigDecimal!
+  lpTokenTotal: BigDecimal!
+  borrowRate: BigDecimal!
+  accFeeIndex: BigDecimal!  
+  lastFeeIndex: BigDecimal!
+  lastBlockNumber: BigInt!  
 }
 
 type Loan @entity {

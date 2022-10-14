@@ -1,5 +1,4 @@
 {
     "network": "mainnet",
-    "GammaPoolFactory": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-    "GammaPool": "0x6EcC36481d9Cbd8e9547886713387fa2ec7D1218"
+    "GammaPoolFactory": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 }

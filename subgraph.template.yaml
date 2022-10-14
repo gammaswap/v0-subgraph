@@ -15,7 +15,7 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/GammaPoolFactory.ts
       entities:
-        - PoolCreated
+        - Pool
       abis:
         - name: GammaPoolFactory
           file: ./abis/GammaPoolFactory.json
@@ -36,11 +36,9 @@ templates:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
-      file: ./src/mappings/ShortStrategy.ts
+      file: ./src/mappings/GammaPool.ts
       entities:
-        - PoolUpdated
-        - LoanCreated
-        - LoanUpdated
+        - PoolData
       abis:
         - name: GammaPool
           file: ./abis/GammaPool.json

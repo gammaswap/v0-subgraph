@@ -1,19 +1,20 @@
-import { PoolCreated as PoolCreatedSchema } from '../../generated/schema'
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
-import { bigInt } from '@graphprotocol/graph-ts'
+import { GammaPool } from '../../generated/templates'
+import { Pool as PoolCreatedSchema } from '../../generated/schema'
+import { BigInt } from '@graphprotocol/graph-ts'
 
 export function handlePoolCreated(event: PoolCreated): void {
-  let poolCreated = PoolCreatedSchema.load(event.params.pool.toString())
+  // creates new pool instance 
+  const poolCreated = new PoolCreatedSchema(event.transaction.hash.toHex())
 
-  if (!poolCreated) {
-    poolCreated = new PoolCreatedSchema(event.params.pool.toString())
+  poolCreated.address = event.params.pool
+  poolCreated.cfmm = event.params.cfmm
+  poolCreated.protocolId = BigInt.fromString(event.params.protocolId.toString())
+  poolCreated.protocol = event.params.protocol
+  poolCreated.count = event.params.count
 
-    poolCreated.pool = event.params.pool
-    poolCreated.cfmm = event.params.cfmm
-    poolCreated.protocol = event.params.protocol
-    poolCreated.protocolId = bigInt.fromString(event.params.protocolId.toString())
-    poolCreated.count = event.params.count
-  }
+  // instantiate gamma pool template
+  GammaPool.create(event.params.pool)
 
   poolCreated.save()
-}
+} 

@@ -37,7 +37,7 @@ This is the part where we setup the local graph node and subgraphs to listen for
     createdb gammaswap-graph-node
     ```
 
-### 2.2 Running the** **graph node
+### 2.2 Running the graph node
 To start the graph node, run this command. Make sure you make the necessary changes as needed:
 ```bash
 cargo run -p graph-node --release -- \
@@ -83,7 +83,16 @@ Here you will make the query to fetch for the entities you want.
 
 
 ## Debugging
-- If any error logs appear in the graph node daemon, stop the postgres instance, delete ipfs/postgres instances and try again.
+
+### Restarting the Graph Node
+To restart the graph node, delete your postgres database instance, like so:
+```bash
+rm -rf logfile .postgres
+```
+
+Kill your ipfs daemon using `ctrl-c` or remove the hidden ipfs file in your ~ folder
+
+### Miscellaneous
 - If on the client console you receive an error like this:
 ```bash
 MetaMask - RPC Error: [ethjs-query] while formatting outputs from RPC '{"value":{"code":-32603,"data":{"code":-32000,"message":"Nonce too high. Expected nonce to be 0 but got 7. Note that transactions can't be queued when automining.","data":{"message":"Nonce too high. Expected nonce to be 0 but got 7. Note that transactions can't be queued when automining."}}}}

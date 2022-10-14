@@ -1,32 +1,32 @@
-# GS Factory
-type Pool @entity {
+type User @entity {
   id: ID!
-  protocol: Protocol!
-  cfmm: Bytes!
-  tokenBalance: [BigInt!]!
-  lpTokenBalance: BigInt!
-  lpTokensBorrowedPlusInterest: BigInt!
-  lpTokenTotal: BigInt!
-  borrowedInvariant: BigInt!
-  lpInvariant: BigInt!
-  totalVariant: BigInt!
-  borrowRate: BigInt!
-  accFeeIndex: BigInt!
-  lastFeeIndex: BigInt!
-  lastCFMMFeeIndex: BigInt!
-  lastCFMMInvariant: BigInt!
-  lastCFMMTotalSupply: BigInt!
-  lastBlockNumber: BigInt!
-  totalSupply: BigInt!
+  address: Bytes!
+  depositedPools: [Bytes!]!
+  loans: [BigInt!]!
 }
 
-# Protocol
-type Protocol @entity {
+# pool events
+type Pool @entity {
   id: ID!
-  name: String!
   address: Bytes!
-  shortStrategyAddress: Bytes!
-  longStrategyAddress: Bytes!
+  cfmm: Bytes!
+  protocolId: BigInt!
+  protocol: Bytes!
+  count: BigInt!
+}
+
+type PoolData @entity {
+  id: ID!
+  address: Bytes! # address
+  tokenBalances: [BigDecimal!]!
+  lpTokenBalance: BigDecimal!
+  lpTokenBorrowed: BigDecimal!
+  lpTokenBorrowedPlusInterest: BigDecimal!
+  lpTokenTotal: BigDecimal!
+  borrowRate: BigDecimal!
+  accFeeIndex: BigDecimal!  
+  lastFeeIndex: BigDecimal!
+  lastBlockNumber: BigInt!  
 }
 
 type Loan @entity {
@@ -34,15 +34,19 @@ type Loan @entity {
   poolId: Bytes!
   tokensHeld: [BigInt!]!
   heldLiquidity: BigInt!
+  liquidity: BigInt!
   lpTokens: BigInt!
-  rateIndex: BigInt!
+  rateIndex: BigInt! # accFeeIndex
   blockNumber: BigInt!
 }
 
-# User
-type User @entity {
+type LoanData @entity {
   id: ID!
-  address: Bytes!
-  depositedPools: [Pool!]!
-  loans: [Loan!]!
+  poolId: Bytes!
+  tokensHeld: [BigInt!]!
+  heldLiquidity: BigInt!
+  liquidity: BigInt!
+  lpTokens: BigInt!
+  rateIndex: BigInt! # accFeeIndex
+  blockNumber: BigInt!
 }

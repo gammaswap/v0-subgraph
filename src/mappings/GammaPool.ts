@@ -17,6 +17,8 @@ export function handlePoolUpdated(event: PoolUpdated): void {
   poolData.lpTokenBorrowed = BigDecimal.fromString(event.params.lpTokenBalance.toString())
   poolData.lpTokenBorrowedPlusInterest = BigDecimal.fromString(event.params.lpTokenBorrowedPlusInterest.toString())
   poolData.lpTokenTotal = poolData.lpTokenBalance.plus(poolData.lpTokenBorrowedPlusInterest)
+  poolData.lpInvariant = BigDecimal.fromString(event.params.lpInvariant.toString())
+  poolData.lpBorrowedInvariant = BigDecimal.fromString(event.params.lpBorrowedInvariant.toString())
   poolData.borrowRate = borrowRate.toBigDecimal()
   poolData.accFeeIndex = BigDecimal.fromString(event.params.accFeeIndex.toString())
   poolData.lastFeeIndex = BigDecimal.fromString(event.params.lastFeeIndex.toString())

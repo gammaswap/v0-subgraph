@@ -23,10 +23,12 @@ type PoolData @entity {
   lpTokenBorrowed: BigDecimal!
   lpTokenBorrowedPlusInterest: BigDecimal!
   lpTokenTotal: BigDecimal!
+  lpInvariant: BigDecimal!
+  lpBorrowedInvariant: BigDecimal!
   borrowRate: BigDecimal!
   accFeeIndex: BigDecimal!  
   lastFeeIndex: BigDecimal!
-  lastBlockNumber: BigInt!  
+  lastBlockNumber: BigInt!
 }
 
 type Loan @entity {

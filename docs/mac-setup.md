@@ -12,8 +12,8 @@ This is to deploy smart contracts on a local environment with Hardhat. There is 
 
 ### 1.1 Setup Hardhat Environment and Deploy Smart Contracts
 
-- Follow the instructions in the [readme.md](https://github.com/gammaswap/v1-periphery#readme0) file for v1-periphery to deploy the contracts to local hardhat network.
-- call `yarn prepare` to copy v1-interface environment variables in `.env.development` to populate the v1-subgraph `subgraph.yaml` contracts.
+- Follow the instructions in the [readme.md](https://github.com/gammaswap/v1-periphery#readme0) file for v1-periphery to deploy the contracts to local hardhat network. Or you can just setup a local blockchain without configurations.
+- call `yarn prepare` to generate a `subgraph.yaml` file from the config folder's variables.
 
 ### 1.2 Import Account into Metamask
 
@@ -26,10 +26,16 @@ This is to deploy smart contracts on a local environment with Hardhat. There is 
 This is the part where we setup the local graph node and subgraphs to listen for events triggered on GammaSwap’s smart contracts.
 
 ### 2.1 Setup Dependencies for the graph node
+I'd recommend setting up your directory like so:
+```bash
+subgraph
+--- graph-node
+--- v1-subgraph
+```
 
-- clone the [graph node repo](https://github.com/graphprotocol/graph-node). Run `cargo build` to install its dependencies. This is going to take a while.
+- clone the [graph node repo](https://github.com/graphprotocol/graph-node). `cd` into graph-node and run `cargo build` to install its dependencies. This is going to take a while.
 - start an IPFS node `ipfs daemon`. If you don’t have ipfs set up, install it online and run `ipfs init`.
-- Install Postgres and run `initdb -D .postgres`. This creates a database cluster managed by a single server instance.
+- Install Postgres and run `initdb -D .postgres` in the `subgraph` folder. This creates a database cluster managed by a single server instance.
 - To run the db, run `pg_ctl -D .postgres -l logfile start`. Similarly, you can stop the db by running the command with stop.
 - create the graph-node db that will store the event data, like so:
     
@@ -46,6 +52,8 @@ cargo run -p graph-node --release -- \
 --ipfs 127.0.0.1:5001 \
 --debug
 ```
+You can use any username and password, just make sure the `DB_NAME` matches the db. Read [this](https://github.com/messari/subgraphs/blob/de8ee285616aed3e5997386349af8f5841e07176/docs/ERRORS.md#postgres-troubleshooting) to learn how to navigate through the database. This should be running on your local machine, so `LOCALHOST` should be the network of the local blockchain you create (e.g. hardhat is usually http://localhost:8545)
+
 Once the graph node is running, it will begin picking up events (i.e. created subgraph, smart contract event triggers, etc.)
 
 In my case, my database was *gammaswap-graph-node* and I’m pushing this to my [localhost](http://localhost) at port 8545. For some reason, writing mainnet for the network doesn’t really push it to mainnet.
@@ -100,3 +108,4 @@ MetaMask - RPC Error: [ethjs-query] while formatting outputs from RPC '{"value":
 Follow this [article](https://metamask.zendesk.com/hc/en-us/articles/360015488891-How-to-reset-an-account).
 - Make sure all of your connections live on the same network and port. This goes for the correct deployed addresses and Alchemy URLs.
 - Read through the postgres logs and graph node daemon to debug any runtime errors.
+- This [Youtube video](https://www.youtube.com/watch?v=nH_pZWgQb7g) has a similar process of installing the graph-node.

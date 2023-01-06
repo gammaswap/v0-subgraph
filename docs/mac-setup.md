@@ -35,7 +35,7 @@ subgraph
 
 - clone the [graph node repo](https://github.com/graphprotocol/graph-node). `cd` into graph-node and run `cargo build` to install its dependencies. This is going to take a while.
 - start an IPFS node `ipfs daemon`. If you don’t have ipfs set up, install it online and run `ipfs init`.
-- Install Postgres and run `initdb -D .postgres` in the `subgraph` folder. This creates a database cluster managed by a single server instance.
+- Install Postgres and run `initdb -E UTF8 --locale C .postgres` in the `subgraph` folder, per [this](https://github.com/graphprotocol/graph-node/blob/master/NEWS.md#unreleased). This creates a database cluster managed by a single server instance.
 - To run the db, run `pg_ctl -D .postgres -l logfile start`. Similarly, you can stop the db by running the command with stop.
 - create the graph-node db that will store the event data, like so:
     

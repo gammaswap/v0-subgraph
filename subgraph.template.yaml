@@ -24,7 +24,7 @@ dataSources:
         - name: ERC20
           file: ./abis/ERC20.json
       eventHandlers:
-        - event: PoolCreated(indexed address,indexed address,indexed uint24,address,uint256)
+        - event: PoolCreated(indexed address,indexed address,indexed uint16,address,uint256)
           handler: handlePoolCreated
 templates:
   - kind: ethereum/contract
@@ -47,7 +47,7 @@ templates:
       eventHandlers:
         - event: PoolUpdated(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
           handler: handlePoolUpdated
-        - event: LoanCreated(indexed address,uint256)
-          handler: handleLoanCreated
-        - event: LoanUpdated(indexed uint256,uint256[],uint256,uint256,uint256,uint256)
-          handler: handleLoanUpdated
+        #- event: LoanCreated(indexed address,uint256)
+          #handler: handleLoanCreated
+        #- event: LoanUpdated(indexed uint256,uint128[],uint256,uint256,uint256)
+          #handler: handleLoanUpdated

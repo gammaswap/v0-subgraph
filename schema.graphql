@@ -18,14 +18,14 @@ type Pool @entity {
 type PoolData @entity {
   id: ID!
   address: Bytes! # address
-  tokenBalances: [BigDecimal!]!
+  # tokenBalances: [BigDecimal!]!
   lpTokenBalance: BigDecimal!
   lpTokenBorrowed: BigDecimal!
   lpTokenBorrowedPlusInterest: BigDecimal!
   lpTokenTotal: BigDecimal!
   lpInvariant: BigDecimal!
   lpBorrowedInvariant: BigDecimal!
-  borrowRate: BigDecimal!
+  #borrowRate: BigDecimal!
   accFeeIndex: BigDecimal!  
   lastFeeIndex: BigDecimal!
   lastBlockNumber: BigInt!

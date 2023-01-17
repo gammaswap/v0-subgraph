@@ -52,15 +52,15 @@ export function handlePoolUpdated(event: PoolUpdated): void {
   poolData.newAccFeeIndex = BigInt.fromString(event.params.accFeeIndex.toString())
   poolData.blockNumber = event.block.number
 
-  poolData.price = new BigInt(10) // dummy price: CFMM_RESERVES[1] / CFMM_RESERVES[0] 
+  poolData.price = BigInt.fromString('1') // dummy price: CFMM_RESERVES[1] / CFMM_RESERVES[0] 
   poolData.suppliedLiquidity = BigInt.fromString( //2 * TOTAL_INVARIANT * sqrt(price)
-    (new BigInt(2))
+    BigInt.fromString('2')
       .times(poolData.lpTotalInvariant)
       .times(poolData.price.sqrt())
       .toString())
 
   poolData.borrowedLiquidity = BigInt.fromString( //2 * BORROWED_INVARIANT * sqrt(price)
-    (new BigInt(2))
+    BigInt.fromString('2')
       .times(poolData.lpBorrowedInvariant)
       .times(poolData.price.sqrt())
       .toString())

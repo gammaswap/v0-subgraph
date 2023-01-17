@@ -11,18 +11,18 @@ type Pool @entity {
   address: Bytes!
   cfmm: Bytes!
   protocolId: BigInt!
+  tokenBalances: [BigInt!]!
   #protocol: Bytes!
   count: BigInt!
   blockNumber: BigInt!
   oldAccFeeIndex: BigInt!
   newAccFeeIndex: BigInt!
-  lastFeeIndex: BigInt!
+  lastFeeIndex: BigDecimal!
 }
 
 type PoolData @entity {
   id: ID!
   address: Bytes! # address
-  # tokenBalances: [BigDecimal!]!
   lpTokenBalance: BigInt!
   lpTokenBorrowed: BigInt!
   lpTokenBorrowedPlusInterest: BigInt!
@@ -35,11 +35,9 @@ type PoolData @entity {
   borrowedLiquidity: BigInt!
   #borrowRate: BigDecimal!
   lastBlockNumber: BigInt!
-  lastFeeIndex: BigInt!
-  newAccFeeIndex: BigInt!
   blockNumber: BigInt!
   price: BigInt!
-  #totalCollateral: BigInt!
+  totalCollateral: BigInt!
 }
 
 type Loan @entity {
@@ -64,4 +62,11 @@ type LoanData @entity {
   collateral: BigInt!
   loanToValue: BigDecimal!
   blockNumber: BigInt!
+}
+
+type GammaSwapOverview @entity {
+  id: ID!
+  totalSupplied: BigInt!
+  totalBorrowed: BigInt!
+  totalCollateral: BigInt!
 }

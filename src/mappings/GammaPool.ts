@@ -12,47 +12,19 @@ export function handlePoolUpdated(event: PoolUpdated): void {
   let gammaPool = GammaPool.bind(event.address)
   let Pool = PoolSchema.load(event.address.toHexString())
 
-
-  if (Pool) {
-    //first time the poolData gets changed, since it gets initialized with blockNumber 0 on PoolCreation
-    if (Pool.blockNumber.toString() == "0") {
-      Pool.blockNumber = event.block.number
-      Pool.newAccFeeIndex = BigInt.fromString(event.params.accFeeIndex.toString())
-      Pool.oldAccFeeIndex = BigInt.fromString(event.params.accFeeIndex.toString())
-      Pool.lastFeeIndex = BigInt.fromString(Pool.newAccFeeIndex.div(Pool.oldAccFeeIndex).toString())
-    }
-    //in same block, keep updating the newFee, because the newFee turns into the oldFee when the block finishes
-    else if (event.block.number == Pool.blockNumber) {
-      Pool.newAccFeeIndex = BigInt.fromString(event.params.accFeeIndex.toString())
-      Pool.lastFeeIndex = BigInt.fromString(Pool.newAccFeeIndex.div(Pool.oldAccFeeIndex).toString())
-    }
-    //in new blocks, the value of oldFee is set to newFee and newFee gets the new event value
-    else if (event.block.number > Pool.blockNumber) {
-      Pool.blockNumber = event.block.number
-      Pool.oldAccFeeIndex = Pool.newAccFeeIndex
-      Pool.newAccFeeIndex = BigInt.fromString(event.params.accFeeIndex.toString())
-      Pool.lastFeeIndex = BigInt.fromString(Pool.newAccFeeIndex.div(Pool.oldAccFeeIndex).toString())
-    }
-
-    Pool.save()
-  }
-
-
   poolData.address = event.address // the gammaPool contract address
-  poolData.lpTokenBalance = BigInt.fromString(event.params.lpTokenBalance.toString())
-  poolData.lpTokenBorrowed = BigInt.fromString(event.params.lpTokenBorrowed.toString())
-  poolData.lpTokenBorrowedPlusInterest = BigInt.fromString(event.params.lpTokenBorrowedPlusInterest.toString())
+  poolData.lpTokenBalance = event.params.lpTokenBalance
+  poolData.lpTokenBorrowed = event.params.lpTokenBorrowed
+  poolData.lpTokenBorrowedPlusInterest = event.params.lpTokenBorrowedPlusInterest
   poolData.lpTokenTotal = BigInt.fromString(poolData.lpTokenBalance.plus(poolData.lpTokenBorrowedPlusInterest).toString())
-  poolData.lpInvariant = BigInt.fromString(event.params.lpInvariant.toString())
-  poolData.lpBorrowedInvariant = BigInt.fromString(event.params.lpBorrowedInvariant.toString())
+  poolData.lpInvariant = event.params.lpInvariant
+  poolData.lpBorrowedInvariant = event.params.lpBorrowedInvariant
   poolData.lpTotalInvariant = BigInt.fromString(poolData.lpInvariant.plus(poolData.lpBorrowedInvariant).toString())
   poolData.lpUtilizationRate = BigDecimal.fromString(poolData.lpBorrowedInvariant.toBigDecimal().div(poolData.lpTotalInvariant.toBigDecimal()).toString())
   poolData.lastBlockNumber = event.params.lastBlockNumber
-  poolData.lastFeeIndex = BigInt.fromString(event.params.lastFeeIndex.toString())
-  poolData.newAccFeeIndex = BigInt.fromString(event.params.accFeeIndex.toString())
   poolData.blockNumber = event.block.number
 
-  poolData.price = BigInt.fromString('1') // dummy price: CFMM_RESERVES[1] / CFMM_RESERVES[0] 
+  poolData.price = BigInt.fromI32(1) // dummy price: CFMM_RESERVES[1] / CFMM_RESERVES[0] 
   poolData.suppliedLiquidity = BigInt.fromString( //2 * TOTAL_INVARIANT * sqrt(price)
     BigInt.fromString('2')
       .times(poolData.lpTotalInvariant)
@@ -65,20 +37,50 @@ export function handlePoolUpdated(event: PoolUpdated): void {
       .times(poolData.price.sqrt())
       .toString())
 
-  //poolData.totalCollateral = 
+  if (Pool) {
+    //first time the poolData gets changed, since it gets initialized with blockNumber 0 on PoolCreation
+    if (Pool.blockNumber.toString() == "0") {
+      Pool.blockNumber = event.block.number
+      Pool.newAccFeeIndex = event.params.accFeeIndex
+      Pool.oldAccFeeIndex = event.params.accFeeIndex
+      Pool.lastFeeIndex = BigDecimal.fromString(Pool.newAccFeeIndex.toBigDecimal().div(Pool.oldAccFeeIndex.toBigDecimal()).toString())
+    }
+    //in same block, keep updating the newFee, because the newFee turns into the oldFee when the block finishes
+    else if (event.block.number == Pool.blockNumber) {
+      Pool.newAccFeeIndex = event.params.accFeeIndex
+      Pool.lastFeeIndex = BigDecimal.fromString(Pool.newAccFeeIndex.toBigDecimal().div(Pool.oldAccFeeIndex.toBigDecimal()).toString())
+    }
+    //in new blocks, the value of oldFee is set to newFee and newFee gets the new event value
+    else if (event.block.number > Pool.blockNumber) {
+      Pool.blockNumber = event.block.number
+      Pool.oldAccFeeIndex = Pool.newAccFeeIndex
+      Pool.newAccFeeIndex = event.params.accFeeIndex
+      Pool.lastFeeIndex = BigDecimal.fromString(Pool.newAccFeeIndex.toBigDecimal().div(Pool.oldAccFeeIndex.toBigDecimal()).toString())
+    }
+    poolData.totalCollateral = BigInt.fromString( //TOKEN_BALANCE[0] * price + TOKEN_BALANCE[1]
+      Pool.tokenBalances[0]
+        .times(poolData.price)
+        .times(Pool.tokenBalances[1])
+        .toString())
 
-  //poolData.tokenBalance[0] = (lpTokenBalance/totalLpTokens)*(token0_reserves/token1_reserves)
+    Pool.save()
+  }
 
   poolData.save()
 }
 
 export function handleLoanUpdated(event: LoanUpdated): void {
   let loanData = new LoanDataSchema(event.transaction.hash.toHex())
+  let pool = PoolSchema.load(event.address.toHexString())
   //MISSING: poolID, heldLiquidity
-  loanData.tokensHeld = [BigInt.fromString(event.params.tokensHeld[0].toString()), BigInt.fromString(event.params.tokensHeld[1].toString())];
-  loanData.liquidity = BigInt.fromString(event.params.liquidity.toString())
-  loanData.lpTokens = BigInt.fromString(event.params.lpTokens.toString())
-  loanData.rateIndex = BigInt.fromString(event.params.rateIndex.toString())
+  if (pool) {
+    loanData.tokensHeld = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
+    pool.tokenBalances = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
+    pool.save()
+  }
+  loanData.liquidity = event.params.liquidity
+  loanData.lpTokens = event.params.lpTokens
+  loanData.rateIndex = event.params.rateIndex
   loanData.collateral = BigInt.fromString(
     (loanData.tokensHeld[0]
       .times(loanData.tokensHeld[1]))
@@ -86,9 +88,10 @@ export function handleLoanUpdated(event: LoanUpdated): void {
       .toString())
 
   loanData.loanToValue = BigDecimal.fromString(
-    new BigDecimal(loanData.liquidity)
-      .div(new BigDecimal(loanData.collateral))
+    loanData.liquidity.toBigDecimal()
+      .div(loanData.collateral.toBigDecimal())
       .toString())
   loanData.blockNumber = event.block.number
   loanData.save()
+
 }

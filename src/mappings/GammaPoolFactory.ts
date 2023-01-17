@@ -11,12 +11,13 @@ export function handlePoolCreated(event: PoolCreated): void {
   poolCreated.cfmm = event.params.cfmm
   poolCreated.protocolId = BigInt.fromString(event.params.protocolId.toString())
   //poolCreated.protocol = event.params.protocol
+  poolCreated.tokenBalances = [BigInt.fromString('0'), BigInt.fromString('0')]
 
   poolCreated.count = event.params.count
   poolCreated.blockNumber = new BigInt(0)
   poolCreated.oldAccFeeIndex = new BigInt(0)
   poolCreated.newAccFeeIndex = new BigInt(0)
-  poolCreated.lastFeeIndex = new BigInt(0)
+  poolCreated.lastFeeIndex = new BigDecimal(new BigInt(0))
 
 
   // instantiate gamma pool template

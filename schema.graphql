@@ -11,24 +11,35 @@ type Pool @entity {
   address: Bytes!
   cfmm: Bytes!
   protocolId: BigInt!
-  protocol: Bytes!
+  #protocol: Bytes!
   count: BigInt!
+  blockNumber: BigInt!
+  oldAccFeeIndex: BigInt!
+  newAccFeeIndex: BigInt!
+  lastFeeIndex: BigInt!
 }
 
 type PoolData @entity {
   id: ID!
   address: Bytes! # address
   # tokenBalances: [BigDecimal!]!
-  lpTokenBalance: BigDecimal!
-  lpTokenBorrowed: BigDecimal!
-  lpTokenBorrowedPlusInterest: BigDecimal!
-  lpTokenTotal: BigDecimal!
-  lpInvariant: BigDecimal!
-  lpBorrowedInvariant: BigDecimal!
+  lpTokenBalance: BigInt!
+  lpTokenBorrowed: BigInt!
+  lpTokenBorrowedPlusInterest: BigInt!
+  lpTokenTotal: BigInt!
+  lpInvariant: BigInt!
+  lpBorrowedInvariant: BigInt!
+  lpTotalInvariant: BigInt!
+  lpUtilizationRate: BigDecimal!
+  suppliedLiquidity: BigInt!
+  borrowedLiquidity: BigInt!
   #borrowRate: BigDecimal!
-  accFeeIndex: BigDecimal!  
-  lastFeeIndex: BigDecimal!
   lastBlockNumber: BigInt!
+  lastFeeIndex: BigInt!
+  newAccFeeIndex: BigInt!
+  blockNumber: BigInt!
+  price: BigInt!
+  #totalCollateral: BigInt!
 }
 
 type Loan @entity {
@@ -44,11 +55,13 @@ type Loan @entity {
 
 type LoanData @entity {
   id: ID!
-  poolId: Bytes!
+  #poolId: Bytes!
   tokensHeld: [BigInt!]!
-  heldLiquidity: BigInt!
+  #heldLiquidity: BigInt!
   liquidity: BigInt!
   lpTokens: BigInt!
   rateIndex: BigInt! # accFeeIndex
+  collateral: BigInt!
+  loanToValue: BigDecimal!
   blockNumber: BigInt!
 }

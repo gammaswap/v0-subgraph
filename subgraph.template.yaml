@@ -49,5 +49,5 @@ templates:
           handler: handlePoolUpdated
         #- event: LoanCreated(indexed address,uint256)
           #handler: handleLoanCreated
-        #- event: LoanUpdated(indexed uint256,uint128[],uint256,uint256,uint256)
-          #handler: handleLoanUpdated
+        - event: LoanUpdated(indexed uint256,uint128[],uint256,uint256,uint256)
+          handler: handleLoanUpdated

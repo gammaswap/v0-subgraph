@@ -6,25 +6,22 @@ import { BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts'
 import { createdPoolsAndLoans as createdPoolsAndLoans } from '../../generated/schema'
 
 export function handleGammaSwapOverview(): void {
-    const overview = new GammaSwapOverview("CURRENT")
-    const created = createdPoolsAndLoans.load("CREATE")
+
     let borrowed: BigInt = new BigInt(0)
     let supplied: BigInt = new BigInt(0)
     let collateral: BigInt = new BigInt(0)
-    if (created) {
-        let length = created.IDcreatedPools.length
-        for (let i = 0; i < length; i++) {
-            let pool = PoolCreatedSchema.load(created.IDcreatedPools[i].toString())
-            if (pool) {
-                borrowed = borrowed.plus(pool.borrowedLiquidity)
-                supplied = supplied.plus(pool.suppliedLiquidity)
-                collateral = collateral.plus(pool.totalCollateral)
-            }
-        }
-        overview.totalBorrowed = BigInt.fromString(borrowed.toString())
-        overview.totalSupplied = BigInt.fromString(supplied.toString())
-        overview.totalCollateral = BigInt.fromString(collateral.toString())
-        overview.save()
-
+    let i = 0
+    let pool = PoolCreatedSchema.load(i.toString())
+    while (pool) {
+        borrowed = borrowed.plus(pool.borrowedLiquidity)
+        supplied = supplied.plus(pool.suppliedLiquidity)
+        collateral = collateral.plus(pool.totalCollateral)
+        let pool = PoolCreatedSchema.load(i.toString())
     }
+    overview.totalBorrowed = BigInt.fromString(borrowed.toString())
+    overview.totalSupplied = BigInt.fromString(supplied.toString())
+    overview.totalCollateral = BigInt.fromString(collateral.toString())
+    overview.save()
+
+}
 }

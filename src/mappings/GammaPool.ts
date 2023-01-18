@@ -62,7 +62,9 @@ export function handlePoolUpdated(event: PoolUpdated): void {
         .times(poolData.price)
         .times(Pool.tokenBalances[1])
         .toString())
-
+    Pool.suppliedLiquidity = poolData.suppliedLiquidity
+    Pool.borrowedLiquidity = poolData.borrowedLiquidity
+    Pool.totalCollateral = poolData.totalCollateral
     Pool.save()
   }
 

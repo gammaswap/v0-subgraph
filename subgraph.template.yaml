@@ -16,6 +16,7 @@ dataSources:
       file: ./src/mappings/GammaPoolFactory.ts
       entities:
         - Pool
+        - createdPoolsAndLoans
       abis:
         - name: GammaPoolFactory
           file: ./abis/GammaPoolFactory.json

@@ -18,6 +18,9 @@ type Pool @entity {
   oldAccFeeIndex: BigInt!
   newAccFeeIndex: BigInt!
   lastFeeIndex: BigDecimal!
+  suppliedLiquidity: BigInt!
+  borrowedLiquidity: BigInt!
+  totalCollateral: BigInt!
 }
 
 type PoolData @entity {
@@ -69,4 +72,10 @@ type GammaSwapOverview @entity {
   totalSupplied: BigInt!
   totalBorrowed: BigInt!
   totalCollateral: BigInt!
+}
+
+type createdPoolsAndLoans @entity {
+  id: ID!
+  IDcreatedPools: [Bytes!]!
+  IDcreatedLoans: [Bytes!]!
 }

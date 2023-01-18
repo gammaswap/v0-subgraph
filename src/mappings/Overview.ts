@@ -6,7 +6,7 @@ import { BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts'
 import { createdPoolsAndLoans as createdPoolsAndLoans } from '../../generated/schema'
 
 export function handleGammaSwapOverview(): void {
-    const overview = new GammaSwapOverview("hi")
+    const overview = new GammaSwapOverview("CURRENT")
     const created = createdPoolsAndLoans.load("CREATE")
     let borrowed: BigInt = new BigInt(0)
     let supplied: BigInt = new BigInt(0)

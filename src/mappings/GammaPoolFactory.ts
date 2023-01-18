@@ -2,21 +2,22 @@ import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
 import { GammaPool } from '../../generated/templates'
 import { Pool as PoolCreatedSchema } from '../../generated/schema'
 import { GammaSwapOverview as GammaSwapOverview } from '../../generated/schema'
-import { BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts'
-import { createdPoolsAndLoans as createdPoolsAndLoans } from '../../generated/schema'
+import { BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
+import { createdPoolsAndLoans as createdIDSchema } from '../../generated/schema'
 
 export function handlePoolCreated(event: PoolCreated): void {
   // creates new pool instance 
   const poolCreated = new PoolCreatedSchema(event.params.pool.toHexString())
 
-  let created = createdPoolsAndLoans.load("CREATE")
-  if (created === null) {
-    created = new createdPoolsAndLoans("CREATE")
-  }
+  let created = createdIDSchema.load("CREATE")
+  if (created === null) created = new createdIDSchema("CREATE")
 
 
   poolCreated.address = event.params.pool
-  created.IDcreatedPools.push(event.params.pool)
+  created.IDcreatedPools = created.IDcreatedPools.concat([event.params.pool])
+  //created.IDcreatedPools = []
+  created.IDcreatedLoans = []
+
 
   poolCreated.cfmm = event.params.cfmm
   poolCreated.protocolId = BigInt.fromString(event.params.protocolId.toString())

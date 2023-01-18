@@ -9,13 +9,17 @@ export function handlePoolCreated(event: PoolCreated): void {
   // creates new pool instance 
   const poolCreated = new PoolCreatedSchema(event.params.pool.toHexString())
 
-  let created = createdIDSchema.load("CREATE")
-  if (created === null) created = new createdIDSchema("CREATE")
+  let created = createdIDSchema.load("CREATE") // load in current addresses if its already init
+  if (created === null) { // init entity and make it have the pool that was just emitted by the event
+    created = new createdIDSchema("CREATE")
+    created.IDcreatedPools = [event.params.pool]
+  }
+  else { //if init, append new address
+    created.IDcreatedPools = created.IDcreatedPools.concat([event.params.pool])
+  }
 
 
   poolCreated.address = event.params.pool
-  created.IDcreatedPools = created.IDcreatedPools.concat([event.params.pool])
-  //created.IDcreatedPools = []
   created.IDcreatedLoans = []
 
 

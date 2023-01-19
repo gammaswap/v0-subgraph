@@ -71,7 +71,6 @@ type GammaSwapOverview @entity {
   id: ID!
   #createdLoans: [Bytes!]!
   createdPools: [Bytes!]!
-  xpool: Bytes!
   totalSupplied: BigInt!
   totalBorrowed: BigInt!
   totalCollateral: BigInt!

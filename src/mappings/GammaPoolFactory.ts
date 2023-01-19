@@ -42,6 +42,5 @@ export function handlePoolCreatedForOverview(event: PoolCreated): void {
   overview.totalBorrowed = ZERO_BI
   overview.totalCollateral = ZERO_BI
   overview.totalSupplied = ZERO_BI
-  overview.xpool = event.params.pool
   overview.save()
 }

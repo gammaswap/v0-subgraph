@@ -16,7 +16,6 @@ dataSources:
       file: ./src/mappings/GammaPoolFactory.ts
       entities:
         - Pool
-        - createdPoolsAndLoans
       abis:
         - name: GammaPoolFactory
           file: ./abis/GammaPoolFactory.json
@@ -52,4 +51,5 @@ templates:
           #handler: handleLoanCreated
         - event: LoanUpdated(indexed uint256,uint128[],uint256,uint256,uint256)
           handler: handleLoanUpdated
+        
     

@@ -69,13 +69,10 @@ type LoanData @entity {
 
 type GammaSwapOverview @entity {
   id: ID!
+  #createdLoans: [Bytes!]!
+  createdPools: [Bytes!]!
+  xpool: Bytes!
   totalSupplied: BigInt!
   totalBorrowed: BigInt!
   totalCollateral: BigInt!
-}
-
-type createdPoolsAndLoans @entity {
-  id: ID!
-  IDcreatedPools: [Bytes!]!
-  IDcreatedLoans: [Bytes!]!
 }

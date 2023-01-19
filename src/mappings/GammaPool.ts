@@ -1,9 +1,11 @@
 import { LoanUpdated, PoolUpdated } from '../../generated/GammaPoolFactory/GammaPool'
-import { PoolData as PoolDataSchema } from '../../generated/schema'
+import { GammaSwapOverview, PoolData as PoolDataSchema } from '../../generated/schema'
 import { LoanData as LoanDataSchema } from '../../generated/schema'
 import { Pool as PoolSchema } from '../../generated/schema'
 import { GammaPool } from '../../generated/templates/GammaPool/GammaPool'
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
+import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
+import { ZERO_BI } from './helpers'
 
 
 
@@ -69,6 +71,7 @@ export function handlePoolUpdated(event: PoolUpdated): void {
   }
 
   poolData.save()
+  handleGammaSwapOverview(event)
 }
 
 export function handleLoanUpdated(event: LoanUpdated): void {
@@ -96,4 +99,27 @@ export function handleLoanUpdated(event: LoanUpdated): void {
   loanData.blockNumber = event.block.number
   loanData.save()
 
+}
+
+export function handleGammaSwapOverview(event: PoolUpdated): void {
+  let overview = GammaSwapOverview.load('1')
+  if (overview === null) overview = new GammaSwapOverview('1')
+  let borrowed: BigInt = ZERO_BI
+  let supplied: BigInt = ZERO_BI
+  let collateral: BigInt = ZERO_BI
+  if (overview) {
+    let length = overview.createdPools.length
+    for (let i = 0; i < length; i++) {
+      let pool = PoolSchema.load(overview.createdPools[i].toHexString())
+      if (pool) {
+        borrowed = borrowed.plus(pool.borrowedLiquidity)
+        supplied = supplied.plus(pool.suppliedLiquidity)
+        collateral = collateral.plus(pool.totalCollateral)
+      }
+    }
+    overview.totalBorrowed = BigInt.fromString(borrowed.toString())
+    overview.totalSupplied = BigInt.fromString(supplied.toString())
+    overview.totalCollateral = BigInt.fromString(collateral.toString())
+    overview.save()
+  }
 }

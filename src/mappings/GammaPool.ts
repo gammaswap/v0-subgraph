@@ -1,11 +1,12 @@
-import { LoanUpdated, PoolUpdated } from '../../generated/GammaPoolFactory/GammaPool'
+import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPoolFactory/GammaPool'
 import { GammaSwapOverview, PoolData as PoolDataSchema } from '../../generated/schema'
 import { LoanData as LoanDataSchema } from '../../generated/schema'
+import { Loan as LoanSchema } from '../../generated/schema'
 import { Pool as PoolSchema } from '../../generated/schema'
 import { GammaPool } from '../../generated/templates/GammaPool/GammaPool'
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
-import { ZERO_BI } from './helpers'
+import { ZERO_BD, ZERO_BI } from './helpers'
 
 
 
@@ -76,13 +77,19 @@ export function handlePoolUpdated(event: PoolUpdated): void {
 
 export function handleLoanUpdated(event: LoanUpdated): void {
   let loanData = new LoanDataSchema(event.transaction.hash.toHex())
+  let loan = LoanSchema.load(event.params.tokenId.toString())
+  if (!loan) loan = new LoanSchema(event.params.tokenId.toString())
+
   let pool = PoolSchema.load(event.address.toHexString())
   //MISSING: poolID, heldLiquidity
   if (pool) {
     loanData.tokensHeld = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
+    loan.tokensHeld = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
     pool.tokenBalances = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
     pool.save()
   }
+  loanData.owner = loan.owner
+  loanData.tokenId = loan.tokenId
   loanData.liquidity = event.params.liquidity
   loanData.lpTokens = event.params.lpTokens
   loanData.rateIndex = event.params.rateIndex
@@ -99,6 +106,37 @@ export function handleLoanUpdated(event: LoanUpdated): void {
   loanData.blockNumber = event.block.number
   loanData.save()
 
+  loan.liquidity = event.params.liquidity
+  loan.lpTokens = event.params.lpTokens
+  loan.rateIndex = event.params.rateIndex
+  loan.collateral = BigInt.fromString(
+    (loan.tokensHeld[0]
+      .times(loan.tokensHeld[1]))
+      .sqrt()
+      .toString())
+
+  loan.loanToValue = BigDecimal.fromString(
+    loan.liquidity.toBigDecimal()
+      .div(loan.collateral.toBigDecimal())
+      .toString())
+  loan.blockNumber = event.block.number
+  loan.save()
+
+}
+export function handleLoanCreated(event: LoanCreated): void {
+  let loan = new LoanSchema(event.params.tokenId.toString())
+  loan.tokenId = event.params.tokenId
+  loan.owner = event.params.caller
+  loan.blockNumber = ZERO_BI
+  loan.liquidity = ZERO_BI
+  loan.lpTokens = ZERO_BI
+  loan.rateIndex = ZERO_BI
+  loan.collateral = ZERO_BI
+  loan.loanToValue = ZERO_BD
+  loan.blockNumber = ZERO_BI
+  loan.tokensHeld = [ZERO_BI, ZERO_BI]
+
+  loan.save()
 }
 
 export function handleGammaSwapOverview(event: PoolUpdated): void {
@@ -123,3 +161,4 @@ export function handleGammaSwapOverview(event: PoolUpdated): void {
     overview.save()
   }
 }
+

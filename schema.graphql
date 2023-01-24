@@ -45,17 +45,23 @@ type PoolData @entity {
 
 type Loan @entity {
   id: ID!
-  poolId: Bytes!
+  owner: Bytes!
+  tokenId: BigInt!
+  #poolId: Bytes!
   tokensHeld: [BigInt!]!
-  heldLiquidity: BigInt!
+  #heldLiquidity: BigInt!
   liquidity: BigInt!
   lpTokens: BigInt!
   rateIndex: BigInt! # accFeeIndex
+  collateral: BigInt!
+  loanToValue: BigDecimal!
   blockNumber: BigInt!
 }
 
 type LoanData @entity {
   id: ID!
+  owner: Bytes!
+  tokenId: BigInt!
   #poolId: Bytes!
   tokensHeld: [BigInt!]!
   #heldLiquidity: BigInt!

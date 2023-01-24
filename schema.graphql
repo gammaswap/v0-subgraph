@@ -5,6 +5,7 @@ type User @entity {
   loans: [BigInt!]!
 }
 
+
 # pool events
 type Pool @entity {
   id: ID!
@@ -21,6 +22,8 @@ type Pool @entity {
   suppliedLiquidity: BigInt!
   borrowedLiquidity: BigInt!
   totalCollateral: BigInt!
+  loans: [Loan!]!@derivedFrom(field: "pool")
+  loanSnapshots: [LoanData!]!@derivedFrom(field: "pool")
 }
 
 type PoolData @entity {
@@ -45,7 +48,7 @@ type PoolData @entity {
 
 type Loan @entity {
   id: ID!
-  owner: Bytes!
+  pool: Pool!
   tokenId: BigInt!
   #poolId: Bytes!
   tokensHeld: [BigInt!]!
@@ -60,7 +63,8 @@ type Loan @entity {
 
 type LoanData @entity {
   id: ID!
-  owner: Bytes!
+  pool: Pool!
+  #poolAddress: Bytes!
   tokenId: BigInt!
   #poolId: Bytes!
   tokensHeld: [BigInt!]!

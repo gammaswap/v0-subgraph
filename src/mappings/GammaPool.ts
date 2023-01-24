@@ -83,13 +83,15 @@ export function handleLoanUpdated(event: LoanUpdated): void {
   let pool = PoolSchema.load(event.address.toHexString())
   //MISSING: poolID, heldLiquidity
   if (pool) {
+    //if (loan.blockNumber == ZERO_BI) pool.loans = pool.loans.concat([event.params.lpTokens])
     loanData.tokensHeld = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
     loan.tokensHeld = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
     pool.tokenBalances = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
     pool.save()
   }
-  loanData.owner = loan.owner
+  //loanData.poolAddress = loan.poolAddress
   loanData.tokenId = loan.tokenId
+  loanData.pool = loan.pool
   loanData.liquidity = event.params.liquidity
   loanData.lpTokens = event.params.lpTokens
   loanData.rateIndex = event.params.rateIndex
@@ -124,9 +126,10 @@ export function handleLoanUpdated(event: LoanUpdated): void {
 
 }
 export function handleLoanCreated(event: LoanCreated): void {
+
   let loan = new LoanSchema(event.params.tokenId.toString())
   loan.tokenId = event.params.tokenId
-  loan.owner = event.params.caller
+  loan.pool = event.address.toHexString()
   loan.blockNumber = ZERO_BI
   loan.liquidity = ZERO_BI
   loan.lpTokens = ZERO_BI

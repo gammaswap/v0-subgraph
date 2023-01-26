@@ -13,7 +13,6 @@ type Pool @entity {
   cfmm: Bytes!
   protocolId: BigInt!
   tokenBalances: [BigInt!]!
-  #protocol: Bytes!
   count: BigInt!
   blockNumber: BigInt!
   oldAccFeeIndex: BigInt!
@@ -39,7 +38,6 @@ type PoolData @entity {
   lpUtilizationRate: BigDecimal!
   suppliedLiquidity: BigInt!
   borrowedLiquidity: BigInt!
-  #borrowRate: BigDecimal!
   lastBlockNumber: BigInt!
   blockNumber: BigInt!
   price: BigInt!
@@ -48,11 +46,9 @@ type PoolData @entity {
 
 type Loan @entity {
   id: ID!
-  pool: Pool!
+  pool: Pool! # address of pool corresponds to id of Pool entity
   tokenId: BigInt!
-  #poolId: Bytes!
   tokensHeld: [BigInt!]!
-  #heldLiquidity: BigInt!
   liquidity: BigInt!
   lpTokens: BigInt!
   rateIndex: BigInt! # accFeeIndex
@@ -63,12 +59,9 @@ type Loan @entity {
 
 type LoanData @entity {
   id: ID!
-  pool: Pool!
-  #poolAddress: Bytes!
+  pool: Pool! # address of pool corresponds to id of Pool entity
   tokenId: BigInt!
-  #poolId: Bytes!
   tokensHeld: [BigInt!]!
-  #heldLiquidity: BigInt!
   liquidity: BigInt!
   lpTokens: BigInt!
   rateIndex: BigInt! # accFeeIndex
@@ -77,9 +70,8 @@ type LoanData @entity {
   blockNumber: BigInt!
 }
 
-type GammaSwapOverview @entity {
+type GSFactory @entity {
   id: ID!
-  #createdLoans: [Bytes!]!
   createdPools: [Bytes!]!
   totalSupplied: BigInt!
   totalBorrowed: BigInt!

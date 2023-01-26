@@ -1,7 +1,7 @@
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
 import { GammaPool } from '../../generated/templates'
-import { Pool as PoolCreatedSchema } from '../../generated/schema'
-import { GammaSwapOverview as GammaSwapOverview } from '../../generated/schema'
+import { GSFactory, Pool as PoolCreatedSchema } from '../../generated/schema'
+import { GSFactory as GammaSwapOverview } from '../../generated/schema'
 import { BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
 import { ZERO_BI } from './helpers'
 
@@ -32,10 +32,10 @@ export function handlePoolCreated(event: PoolCreated): void {
   handlePoolCreatedForOverview(event)
 }
 
-export function handlePoolCreatedForOverview(event: PoolCreated): void {
-  let overview = GammaSwapOverview.load('1') // load in current addresses if its already init
+function handlePoolCreatedForOverview(event: PoolCreated): void {
+  let overview = GSFactory.load('1') // load in current addresses if its already init
   if (overview === null) { // init entity and make it have the pool that was just emitted by the event
-    overview = new GammaSwapOverview('1')
+    overview = new GSFactory('1')
     overview.createdPools = [event.params.pool]
   }
   else overview.createdPools = overview.createdPools.concat([event.params.pool]) //if already init, append new address

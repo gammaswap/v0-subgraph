@@ -1,5 +1,5 @@
 import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPoolFactory/GammaPool'
-import { GammaSwapOverview, PoolData as PoolDataSchema } from '../../generated/schema'
+import { GSFactory, PoolData as PoolDataSchema } from '../../generated/schema'
 import { LoanData as LoanDataSchema } from '../../generated/schema'
 import { Loan as LoanSchema } from '../../generated/schema'
 import { Pool as PoolSchema } from '../../generated/schema'
@@ -143,8 +143,8 @@ export function handleLoanCreated(event: LoanCreated): void {
 }
 
 export function handleGammaSwapOverview(event: PoolUpdated): void {
-  let overview = GammaSwapOverview.load('1')
-  if (overview === null) overview = new GammaSwapOverview('1')
+  let overview = GSFactory.load('1')
+  if (overview === null) overview = new GSFactory('1')
   let borrowed: BigInt = ZERO_BI
   let supplied: BigInt = ZERO_BI
   let collateral: BigInt = ZERO_BI

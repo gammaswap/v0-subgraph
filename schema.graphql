@@ -5,50 +5,75 @@ type User @entity {
   loans: [BigInt!]!
 }
 
+
 # pool events
 type Pool @entity {
   id: ID!
   address: Bytes!
   cfmm: Bytes!
   protocolId: BigInt!
-  protocol: Bytes!
+  tokenBalances: [BigInt!]!
   count: BigInt!
+  blockNumber: BigInt!
+  oldAccFeeIndex: BigInt!
+  newAccFeeIndex: BigInt!
+  lastFeeIndex: BigDecimal!
+  suppliedLiquidity: BigInt!
+  borrowedLiquidity: BigInt!
+  totalCollateral: BigInt!
+  loans: [Loan!]!@derivedFrom(field: "pool")
+  loanSnapshots: [LoanData!]!@derivedFrom(field: "pool")
 }
 
 type PoolData @entity {
   id: ID!
   address: Bytes! # address
-  # tokenBalances: [BigDecimal!]!
-  lpTokenBalance: BigDecimal!
-  lpTokenBorrowed: BigDecimal!
-  lpTokenBorrowedPlusInterest: BigDecimal!
-  lpTokenTotal: BigDecimal!
-  lpInvariant: BigDecimal!
-  lpBorrowedInvariant: BigDecimal!
-  #borrowRate: BigDecimal!
-  accFeeIndex: BigDecimal!  
-  lastFeeIndex: BigDecimal!
+  lpTokenBalance: BigInt!
+  lpTokenBorrowed: BigInt!
+  lpTokenBorrowedPlusInterest: BigInt!
+  lpTokenTotal: BigInt!
+  lpInvariant: BigInt!
+  lpBorrowedInvariant: BigInt!
+  lpTotalInvariant: BigInt!
+  lpUtilizationRate: BigDecimal!
+  suppliedLiquidity: BigInt!
+  borrowedLiquidity: BigInt!
   lastBlockNumber: BigInt!
+  blockNumber: BigInt!
+  price: BigInt!
+  totalCollateral: BigInt!
 }
 
 type Loan @entity {
   id: ID!
-  poolId: Bytes!
+  pool: Pool! # address of pool corresponds to id of Pool entity
+  tokenId: BigInt!
   tokensHeld: [BigInt!]!
-  heldLiquidity: BigInt!
   liquidity: BigInt!
   lpTokens: BigInt!
   rateIndex: BigInt! # accFeeIndex
+  collateral: BigInt!
+  loanToValue: BigDecimal!
   blockNumber: BigInt!
 }
 
 type LoanData @entity {
   id: ID!
-  poolId: Bytes!
+  pool: Pool! # address of pool corresponds to id of Pool entity
+  tokenId: BigInt!
   tokensHeld: [BigInt!]!
-  heldLiquidity: BigInt!
   liquidity: BigInt!
   lpTokens: BigInt!
   rateIndex: BigInt! # accFeeIndex
+  collateral: BigInt!
+  loanToValue: BigDecimal!
   blockNumber: BigInt!
+}
+
+type GSFactory @entity {
+  id: ID!
+  createdPools: [Bytes!]!
+  totalSupplied: BigInt!
+  totalBorrowed: BigInt!
+  totalCollateral: BigInt!
 }

@@ -5,7 +5,6 @@ type User @entity {
   loans: [BigInt!]!
 }
 
-
 # pool events
 type Pool @entity {
   id: ID!

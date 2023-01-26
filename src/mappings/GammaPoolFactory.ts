@@ -1,12 +1,12 @@
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
 import { GammaPool } from '../../generated/templates'
-import { GSFactory, Pool as PoolCreatedSchema } from '../../generated/schema'
-import { GSFactory as GammaSwapOverview } from '../../generated/schema'
-import { BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
+import { GSFactory, Pool as PoolCreatedSchema, Token } from '../../generated/schema'
+import { Address, BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
 import { ZERO_BI } from './helpers'
 
 export function handlePoolCreated(event: PoolCreated): void {
   // creates new pool instance 
+  loadOrCreateFactory(event)
   const poolCreated = new PoolCreatedSchema(event.params.pool.toHexString())
 
   poolCreated.address = event.params.pool
@@ -27,7 +27,6 @@ export function handlePoolCreated(event: PoolCreated): void {
   // instantiate gamma pool template
   GammaPool.create(event.params.pool)
   poolCreated.save()
-  loadOrCreateFactory(event)
 }
 
 function loadOrCreateFactory(event: PoolCreated): string | null {

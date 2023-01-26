@@ -5,6 +5,21 @@ type User @entity {
   loans: [BigInt!]!
 }
 
+type Token @entity {
+	id: ID! # address of token
+	name: String!
+	symbol: String!
+	decimals: BigInt!
+	
+	totalSupply: BigInt!
+	totalLiquidity: BigDecimal!
+	tradeVolume: BigDecimal!
+	
+	lastPriceUSD: BigDecimal
+	lastPriceBlock: BigInt # not sure
+	txCount: BigInt! # transactions for all pools
+}
+
 
 # pool events
 type Pool @entity {

@@ -53,15 +53,15 @@ function getOrCreateERC20Token(event: ethereum.Event, address: Address): Token {
   if (!token) token = new Token(address.toHexString())
 
   //not sure how to get correct decimals, uniswap v2 does it manually it seems?
-  token.decimals = BigInt.fromI32(18)
+  //token.decimals = BigInt.fromI32(18)
 
-  //total supply: need to read from token contract
-  //total liquidity: add to liquidity on each PoolUpdated event
-  //trade volume: ?
+  //total supply: ZERO_BI
+  //total liquidity: ZERO_BI
+  //trade volume: ZERO_BI
 
-  //lastpriceUSD: from last swap event
-  //lastpiriceBlock: ^^
-  //tx count: add all transfer events
+  //lastpriceUSD: ZERO_BI
+  //lastpiriceBlock: ZERO_BI
+  //tx count: ZERO_BI
   return token
 }
 */

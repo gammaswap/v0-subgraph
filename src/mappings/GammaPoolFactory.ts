@@ -3,10 +3,13 @@ import { GammaPool } from '../../generated/templates'
 import { GSFactory, Pool as PoolCreatedSchema, Token } from '../../generated/schema'
 import { Address, BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
 import { ZERO_BI } from './helpers'
+import { EthersEvent } from 'alchemy-sdk/dist/src/internal/ethers-event'
 
 export function handlePoolCreated(event: PoolCreated): void {
   // creates new pool instance 
   loadOrCreateFactory(event)
+  //getOrCreateERC20Token(event, event.params.tokens[0])
+  //getOrCreateERC20Token(event, event.params.tokens[1])
   const poolCreated = new PoolCreatedSchema(event.params.pool.toHexString())
 
   poolCreated.address = event.params.pool
@@ -43,3 +46,22 @@ function loadOrCreateFactory(event: PoolCreated): string | null {
 
   return event.params.pool.toHexString()
 }
+
+/*
+function getOrCreateERC20Token(event: ethereum.Event, address: Address): Token {
+  let token = Token.load(address.toHexString())
+  if (!token) token = new Token(address.toHexString())
+
+  //not sure how to get correct decimals, uniswap v2 does it manually it seems?
+  token.decimals = BigInt.fromI32(18)
+
+  //total supply: need to read from token contract
+  //total liquidity: add to liquidity on each PoolUpdated event
+  //trade volume: ?
+
+  //lastpriceUSD: from last swap event
+  //lastpiriceBlock: ^^
+  //tx count: add all transfer events
+  return token
+}
+*/

@@ -6,7 +6,7 @@ import { Pool as PoolSchema } from '../../generated/schema'
 import { GammaPool } from '../../generated/templates/GammaPool/GammaPool'
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
-import { ZERO_BD, ZERO_BI } from './helpers'
+import { FactoryAddress, ZERO_BD, ZERO_BI } from './helpers'
 
 
 export function handlePoolUpdated(event: PoolUpdated): void {
@@ -51,8 +51,8 @@ export function handleLoanCreated(event: LoanCreated): void {
 }
 
 export function handleGammaSwapOverview(event: PoolUpdated): void {
-  let overview = GSFactory.load('1')
-  if (overview === null) overview = new GSFactory('1')
+  let overview = GSFactory.load(FactoryAddress)
+  if (overview === null) overview = new GSFactory(FactoryAddress)
   let borrowed: BigInt = ZERO_BI
   let supplied: BigInt = ZERO_BI
   let collateral: BigInt = ZERO_BI

@@ -34,7 +34,6 @@ export function handlePoolCreated(event: PoolCreated): void {
 
   // instantiate gamma pool template
   GammaPool.create(event.params.pool)
-  GammaPoolTemplate.create(event.params.pool)
   poolCreated.save()
 }
 

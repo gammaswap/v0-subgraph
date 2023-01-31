@@ -23,9 +23,18 @@ export function handlePoolCreated(event: PoolCreated): void {
   poolCreated.suppliedLiquidity = ZERO_BI
   poolCreated.totalCollateral = ZERO_BI
 
+  poolCreated.blockNumber = ZERO_BI
+  poolCreated.oldAccFeeIndex = ZERO_BI
+  poolCreated.newAccFeeIndex = ZERO_BI
+  poolCreated.lastFeeIndex = new BigDecimal(ZERO_BI)
+  poolCreated.borrowedLiquidity = ZERO_BI
+  poolCreated.suppliedLiquidity = ZERO_BI
+  poolCreated.totalCollateral = ZERO_BI
+
 
   // instantiate gamma pool template
   GammaPool.create(event.params.pool)
+  GammaPoolTemplate.create(event.params.pool)
   poolCreated.save()
 }
 

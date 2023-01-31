@@ -7,7 +7,7 @@
     "build": "graph build",
     "create": "graph create GammaSwap --node https://api.thegraph.com/deploy/",
     "create-local": "graph create GammaSwap --node http://127.0.0.1:8020",
-    "prepare": "mustache config/localhost.json subgraph.template.yaml > subgraph.yaml",
+    "prepare": "mustache config/deployments/localhost.json config/templates/subgraph.template.yaml > subgraph.yaml",
     "deploy": "graph deploy GammaSwap --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "deploy-local": "graph deploy GammaSwap --ipfs http://127.0.0.1:5001 --node http://127.0.0.1:8020",
     "remove-local": "graph remove --node http://127.0.0.1:8020/ GammaSwap",

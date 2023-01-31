@@ -1,4 +1,5 @@
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
+<<<<<<< HEAD
 import { GammaPool } from '../../generated/templates'
 import { GSFactory, Pool as PoolCreatedSchema, Token } from '../../generated/schema'
 import { Address, BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
@@ -10,11 +11,24 @@ export function handlePoolCreated(event: PoolCreated): void {
   loadOrCreateFactory(event)
   //getOrCreateERC20Token(event, event.params.tokens[0])
   //getOrCreateERC20Token(event, event.params.tokens[1])
+=======
+import { GammaPool as GammaPoolTemplate } from '../../generated/templates'
+import { GSFactory, Pool as PoolCreatedSchema } from '../../generated/schema'
+import { BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
+import { ZERO_BI } from './helpers'
+
+export function handlePoolCreated(event: PoolCreated): void {
+  // creates new pool instance 
+>>>>>>> main
   const poolCreated = new PoolCreatedSchema(event.params.pool.toHexString())
 
   poolCreated.address = event.params.pool
   poolCreated.cfmm = event.params.cfmm
   poolCreated.protocolId = BigInt.fromString(event.params.protocolId.toString())
+<<<<<<< HEAD
+=======
+  //poolCreated.protocol = event.params.protocol
+>>>>>>> main
   poolCreated.tokenBalances = [BigInt.fromString('0'), BigInt.fromString('0')]
 
   poolCreated.count = event.params.count
@@ -28,11 +42,20 @@ export function handlePoolCreated(event: PoolCreated): void {
 
 
   // instantiate gamma pool template
+<<<<<<< HEAD
   GammaPool.create(event.params.pool)
   poolCreated.save()
 }
 
 function loadOrCreateFactory(event: PoolCreated): string | null {
+=======
+  GammaPoolTemplate.create(event.params.pool)
+  poolCreated.save()
+  handlePoolCreatedForOverview(event)
+}
+
+function handlePoolCreatedForOverview(event: PoolCreated): void {
+>>>>>>> main
   let overview = GSFactory.load('1') // load in current addresses if its already init
   if (overview === null) { // init entity and make it have the pool that was just emitted by the event
     overview = new GSFactory('1')
@@ -43,6 +66,7 @@ function loadOrCreateFactory(event: PoolCreated): string | null {
   overview.totalCollateral = ZERO_BI
   overview.totalSupplied = ZERO_BI
   overview.save()
+<<<<<<< HEAD
 
   return event.params.pool.toHexString()
 }
@@ -65,3 +89,6 @@ function getOrCreateERC20Token(event: ethereum.Event, address: Address): Token {
   return token
 }
 */
+=======
+}
+>>>>>>> main

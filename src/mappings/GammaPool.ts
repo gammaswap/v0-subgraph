@@ -80,9 +80,9 @@ function initPoolData(poolData: PoolDataSchema, Pool: PoolSchema, event: PoolUpd
   poolData.lpTokenBorrowedPlusInterest = event.params.lpTokenBorrowedPlusInterest
   poolData.lpTokenTotal = BigInt.fromString(poolData.lpTokenBalance.plus(poolData.lpTokenBorrowedPlusInterest).toString())
   poolData.lpInvariant = event.params.lpInvariant
-  poolData.lpBorrowedInvariant = event.params.lpBorrowedInvariant
-  poolData.lpTotalInvariant = BigInt.fromString(poolData.lpInvariant.plus(poolData.lpBorrowedInvariant).toString())
-  poolData.lpUtilizationRate = BigDecimal.fromString(poolData.lpBorrowedInvariant.toBigDecimal().div(poolData.lpTotalInvariant.toBigDecimal()).toString())
+  poolData.borrowedInvariant = event.params.borrowedInvariant
+  poolData.lpTotalInvariant = BigInt.fromString(poolData.lpInvariant.plus(poolData.borrowedInvariant).toString())
+  poolData.lpUtilizationRate = BigDecimal.fromString(poolData.borrowedInvariant.toBigDecimal().div(poolData.lpTotalInvariant.toBigDecimal()).toString())
   poolData.lastBlockNumber = event.params.lastBlockNumber
   poolData.blockNumber = event.block.number
 
@@ -95,7 +95,7 @@ function initPoolData(poolData: PoolDataSchema, Pool: PoolSchema, event: PoolUpd
 
   poolData.borrowedLiquidity = BigInt.fromString( //2 * BORROWED_INVARIANT * sqrt(price)
     BigInt.fromString('2')
-      .times(poolData.lpBorrowedInvariant)
+      .times(poolData.borrowedInvariant)
       .times(poolData.price.sqrt())
       .toString())
   poolData.totalCollateral = BigInt.fromString( //TOKEN_BALANCE[0] * price + TOKEN_BALANCE[1]

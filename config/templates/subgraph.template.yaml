@@ -24,7 +24,7 @@ dataSources:
         - name: ERC20
           file: ./abis/ERC20.json
       eventHandlers:
-        - event: PoolCreated(indexed address,indexed address,indexed uint16,address,uint256)
+        - event: PoolCreated(indexed address,indexed address,indexed uint16,address,address[],uint256)
           handler: handlePoolCreated
 templates:
   - kind: ethereum/contract
@@ -45,9 +45,9 @@ templates:
         - name: GammaPoolFactory
           file: ./abis/GammaPoolFactory.json
       eventHandlers:
-        - event: PoolUpdated(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)
+        - event: PoolUpdated(uint256,uint256,uint96,uint96,uint256,uint128,uint128,indexed uint8)
           handler: handlePoolUpdated
         - event: LoanCreated(indexed address,uint256)
           handler: handleLoanCreated
-        - event: LoanUpdated(indexed uint256,uint128[],uint256,uint256,uint256)
+        - event: LoanUpdated(indexed uint256,uint128[],uint128,uint128,uint256,uint96,indexed uint8)
           handler: handleLoanUpdated

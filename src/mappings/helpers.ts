@@ -2,6 +2,7 @@ import { BigInt, BigDecimal } from "@graphprotocol/graph-ts"
 
 export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
 export const UNISWAV2_FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
+export const FactoryAddress = '0xCEc8964dC95eB7a78613017f1FE87B6047D60e4D'
 
 export let ZERO_BI = BigInt.fromI32(0)
 export let ONE_BI = BigInt.fromI32(1)

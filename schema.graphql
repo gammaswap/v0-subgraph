@@ -25,6 +25,13 @@ type Pool @entity {
   address: Bytes!
   cfmm: Bytes!
   protocolId: BigInt!
+  implementation: Bytes!
+  symbol: String
+	name: String
+	tokens: [Token!]!
+	txCount: Int!
+	createdAtTimestamp: BigInt!
+	createdAtBlock: BigInt!
   tokenBalances: [BigInt!]!
   count: BigInt!
   blockNumber: BigInt!
@@ -34,11 +41,9 @@ type Pool @entity {
   suppliedLiquidity: BigInt!
   borrowedLiquidity: BigInt!
   totalCollateral: BigInt!
-  loans: [Loan!]!@derivedFrom(field: "pool")
-  loanSnapshots: [LoanData!]!@derivedFrom(field: "pool")
 }
 
-type PoolData @entity {
+type PoolSnapshot @entity {
   id: ID!
   address: Bytes! # address
   lpTokenBalance: BigInt!
@@ -85,7 +90,6 @@ type LoanData @entity {
 
 type GSFactory @entity {
   id: ID!
-  createdPools: [Bytes!]!
   totalSupplied: BigInt!
   totalBorrowed: BigInt!
   totalCollateral: BigInt!

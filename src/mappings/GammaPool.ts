@@ -1,5 +1,5 @@
 import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPoolFactory/GammaPool'
-import { GSFactory, PoolData as PoolDataSchema } from '../../generated/schema'
+import { GSFactory, PoolSnapshot as PoolDataSchema } from '../../generated/schema'
 import { LoanData as LoanDataSchema } from '../../generated/schema'
 import { Loan as LoanSchema } from '../../generated/schema'
 import { Pool as PoolSchema } from '../../generated/schema'
@@ -17,7 +17,6 @@ export function handlePoolUpdated(event: PoolUpdated): void {
     initPoolData(poolData, Pool, event)
     initPool(Pool, poolData, event)
   }
-  handleGammaSwapOverview(event)
 }
 
 export function handleLoanUpdated(event: LoanUpdated): void {
@@ -29,7 +28,6 @@ export function handleLoanUpdated(event: LoanUpdated): void {
   if (pool) {
     loanData.tokensHeld = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
     loan.tokensHeld = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
-    pool.tokenBalances = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
     pool.save()
   }
   initLoanData(loanData, loan, event)
@@ -48,29 +46,6 @@ export function handleLoanCreated(event: LoanCreated): void {
   loan.blockNumber = ZERO_BI
   loan.tokensHeld = [ZERO_BI, ZERO_BI]
   loan.save()
-}
-
-export function handleGammaSwapOverview(event: PoolUpdated): void {
-  let overview = GSFactory.load('1')
-  if (overview === null) overview = new GSFactory('1')
-  let borrowed: BigInt = ZERO_BI
-  let supplied: BigInt = ZERO_BI
-  let collateral: BigInt = ZERO_BI
-  if (overview) {
-    let length = overview.createdPools.length
-    for (let i = 0; i < length; i++) {
-      let pool = PoolSchema.load(overview.createdPools[i].toHexString())
-      if (pool) {
-        borrowed = borrowed.plus(pool.borrowedLiquidity)
-        supplied = supplied.plus(pool.suppliedLiquidity)
-        collateral = collateral.plus(pool.totalCollateral)
-      }
-    }
-    overview.totalBorrowed = BigInt.fromString(borrowed.toString())
-    overview.totalSupplied = BigInt.fromString(supplied.toString())
-    overview.totalCollateral = BigInt.fromString(collateral.toString())
-    overview.save()
-  }
 }
 
 function initPoolData(poolData: PoolDataSchema, Pool: PoolSchema, event: PoolUpdated): void {

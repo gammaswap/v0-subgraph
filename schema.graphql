@@ -46,7 +46,7 @@ type PoolData @entity {
   lpTokenBorrowedPlusInterest: BigInt!
   lpTokenTotal: BigInt!
   lpInvariant: BigInt!
-  lpBorrowedInvariant: BigInt!
+  borrowedInvariant: BigInt!
   lpTotalInvariant: BigInt!
   lpUtilizationRate: BigDecimal!
   suppliedLiquidity: BigInt!

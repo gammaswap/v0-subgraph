@@ -13,6 +13,7 @@ export function handlePoolCreated(event: PoolCreated): void {
   poolCreated.cfmm = event.params.cfmm
   poolCreated.protocolId = BigInt.fromString(event.params.protocolId.toString())
   poolCreated.implementation = event.params.implementation
+  poolCreated.tokenBalances = [ZERO_BI, ZERO_BI]
   poolCreated.symbol = ''
   poolCreated.name = ''
   poolCreated.tokens = ['']

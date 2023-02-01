@@ -10,11 +10,9 @@ type Token @entity {
 	name: String!
 	symbol: String!
 	decimals: BigInt!
-	
 	totalSupply: BigInt!
 	totalLiquidity: BigDecimal!
 	tradeVolume: BigDecimal!
-	
 	lastPriceUSD: BigDecimal
 	lastPriceBlock: BigInt # not sure
 	txCount: BigInt! # transactions for all pools

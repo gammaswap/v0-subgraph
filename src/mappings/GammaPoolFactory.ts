@@ -2,7 +2,7 @@ import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
 import { GammaPool } from '../../generated/templates'
 import { GSFactory, Pool as PoolCreatedSchema, Token } from '../../generated/schema'
 import { Address, BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
-import { FactoryAddress, ZERO_BI } from './helpers'
+import { GAMMAPOOL_FACTORY_ADDRESS, ZERO_BD, ZERO_BI } from './helpers'
 
 export function handlePoolCreated(event: PoolCreated): void {
   // creates new pool instance 
@@ -11,24 +11,20 @@ export function handlePoolCreated(event: PoolCreated): void {
 
   poolCreated.address = event.params.pool
   poolCreated.cfmm = event.params.cfmm
-  poolCreated.protocolId = BigInt.fromString(event.params.protocolId.toString())
+  poolCreated.implementationID = event.params.protocolId
   poolCreated.implementation = event.params.implementation
-  poolCreated.tokenBalances = [ZERO_BI, ZERO_BI]
-  poolCreated.symbol = ''
-  poolCreated.name = ''
-  poolCreated.tokens = ['']
+  poolCreated.symbol = ""
+  poolCreated.name = ""
+  poolCreated.tokens = []
   poolCreated.txCount = 0
   poolCreated.createdAtTimestamp = event.block.timestamp
   poolCreated.createdAtBlock = event.block.number
-  poolCreated.count = event.params.count
-  poolCreated.blockNumber = ZERO_BI
-  poolCreated.oldAccFeeIndex = ZERO_BI
-  poolCreated.newAccFeeIndex = ZERO_BI
-  poolCreated.lastFeeIndex = new BigDecimal(ZERO_BI)
-  poolCreated.borrowedLiquidity = ZERO_BI
-  poolCreated.suppliedLiquidity = ZERO_BI
-  poolCreated.totalCollateral = ZERO_BI
-
+  poolCreated.lpTokenBalance = ZERO_BI
+  poolCreated.lpTokenBorrowed = ZERO_BI
+  poolCreated.lpTokenBorrowedPlusInterest = ZERO_BI
+  poolCreated.accFeeIndex = ZERO_BI
+  poolCreated.lpInvariant = ZERO_BI
+  poolCreated.borrowedInvariant = ZERO_BI
 
   // instantiate gamma pool template
   GammaPool.create(event.params.pool)
@@ -36,14 +32,26 @@ export function handlePoolCreated(event: PoolCreated): void {
 }
 
 function loadOrCreateFactory(event: PoolCreated): string | null {
-  let factory = GSFactory.load(FactoryAddress) // load in current addresses if its already init
+  let factory = GSFactory.load(GAMMAPOOL_FACTORY_ADDRESS) // load in current addresses if its already init
+  let newFactory: boolean = false;
+
   if (factory === null) { // init entity and make it have the pool that was just emitted by the event
-    factory = new GSFactory(FactoryAddress)
+    factory = new GSFactory(GAMMAPOOL_FACTORY_ADDRESS)
+    newFactory = true
   }
-  factory.totalBorrowed = ZERO_BI
-  factory.totalCollateral = ZERO_BI
-  factory.totalSupplied = ZERO_BI
-  factory.save()
+  factory.totalVolumeUSD = ZERO_BD
+  factory.totalVolumeETH = ZERO_BD
+  factory.totalLiquidityUSD = ZERO_BD
+  factory.totalLiquidityETH = ZERO_BD
+  factory.totalSuppliedUSD = ZERO_BD
+  factory.totalSuppliedETH = ZERO_BD
+  factory.totalBorrowedUSD = ZERO_BD
+  factory.totalBorrowedETH = ZERO_BD
+  factory.totalCollateralUSD = ZERO_BD
+  factory.totalCollateralETH = ZERO_BD
+  factory.txCount = ZERO_BI
+  if (newFactory) factory.poolCount = 1
+  else factory.poolCount = factory.poolCount + 1
 
   return event.params.pool.toHexString()
 }

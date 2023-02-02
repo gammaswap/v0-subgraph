@@ -1,6 +1,6 @@
 import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPoolFactory/GammaPool'
-import { GSFactory, PoolData as PoolDataSchema } from '../../generated/schema'
-import { LoanData as LoanDataSchema } from '../../generated/schema'
+import { GSFactory, PoolSnapshot as PoolSnapshotEntity } from '../../generated/schema'
+import { LoanSnapshot as LoanSnapshotEntity } from '../../generated/schema'
 import { Loan as LoanSchema } from '../../generated/schema'
 import { Pool as PoolSchema } from '../../generated/schema'
 import { GammaPool } from '../../generated/templates/GammaPool/GammaPool'
@@ -8,7 +8,7 @@ import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
 import { ZERO_BD, ZERO_BI } from './helpers'
 
-
+/*
 export function handlePoolUpdated(event: PoolUpdated): void {
   let poolData = new PoolDataSchema(event.transaction.hash.toHex())
   let gammaPool = GammaPool.bind(event.address)
@@ -17,7 +17,6 @@ export function handlePoolUpdated(event: PoolUpdated): void {
     initPoolData(poolData, Pool, event)
     initPool(Pool, poolData, event)
   }
-  handleGammaSwapOverview(event)
 }
 
 export function handleLoanUpdated(event: LoanUpdated): void {
@@ -29,12 +28,12 @@ export function handleLoanUpdated(event: LoanUpdated): void {
   if (pool) {
     loanData.tokensHeld = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
     loan.tokensHeld = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
-    pool.tokenBalances = [event.params.tokensHeld[0], event.params.tokensHeld[1]];
     pool.save()
   }
   initLoanData(loanData, loan, event)
   initLoan(loan, event)
 }
+*/
 export function handleLoanCreated(event: LoanCreated): void {
   let loan = new LoanSchema(event.params.tokenId.toString())
   loan.tokenId = event.params.tokenId
@@ -48,30 +47,7 @@ export function handleLoanCreated(event: LoanCreated): void {
   loan.blockNumber = ZERO_BI
   loan.tokensHeld = [ZERO_BI, ZERO_BI]
   loan.save()
-}
-
-export function handleGammaSwapOverview(event: PoolUpdated): void {
-  let overview = GSFactory.load('1')
-  if (overview === null) overview = new GSFactory('1')
-  let borrowed: BigInt = ZERO_BI
-  let supplied: BigInt = ZERO_BI
-  let collateral: BigInt = ZERO_BI
-  if (overview) {
-    let length = overview.createdPools.length
-    for (let i = 0; i < length; i++) {
-      let pool = PoolSchema.load(overview.createdPools[i].toHexString())
-      if (pool) {
-        borrowed = borrowed.plus(pool.borrowedLiquidity)
-        supplied = supplied.plus(pool.suppliedLiquidity)
-        collateral = collateral.plus(pool.totalCollateral)
-      }
-    }
-    overview.totalBorrowed = BigInt.fromString(borrowed.toString())
-    overview.totalSupplied = BigInt.fromString(supplied.toString())
-    overview.totalCollateral = BigInt.fromString(collateral.toString())
-    overview.save()
-  }
-}
+}/*
 
 function initPoolData(poolData: PoolDataSchema, Pool: PoolSchema, event: PoolUpdated): void {
   poolData.address = event.address // the gammaPool contract address
@@ -164,8 +140,7 @@ function initPool(Pool: PoolSchema, poolData: PoolDataSchema, event: PoolUpdated
     Pool.newAccFeeIndex = event.params.accFeeIndex
     Pool.lastFeeIndex = BigDecimal.fromString(Pool.newAccFeeIndex.toBigDecimal().div(Pool.oldAccFeeIndex.toBigDecimal()).toString())
   }
-  Pool.suppliedLiquidity = poolData.suppliedLiquidity
-  Pool.borrowedLiquidity = poolData.borrowedLiquidity
-  Pool.totalCollateral = poolData.totalCollateral
   Pool.save()
 }
+
+*/

@@ -1,44 +1,52 @@
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
 import { GammaPool as GammaPoolTemplate } from '../../generated/templates'
-import { GSFactory, Pool as PoolCreatedSchema } from '../../generated/schema'
-import { BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
-import { ZERO_BI } from './helpers'
+import { GSFactory, Pool as PoolEntity, Token } from '../../generated/schema'
+import { Address, BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
+import { FACTORY_ADDRESS, ZERO_BD, ZERO_BI } from './helpers'
 
 export function handlePoolCreated(event: PoolCreated): void {
-  // creates new pool instance 
-  const poolCreated = new PoolCreatedSchema(event.params.pool.toHexString())
+  let factory = GSFactory.load(FACTORY_ADDRESS)
 
-  poolCreated.address = event.params.pool
-  poolCreated.cfmm = event.params.cfmm
-  poolCreated.protocolId = BigInt.fromString(event.params.protocolId.toString())
-  //poolCreated.protocol = event.params.protocol
-  poolCreated.tokenBalances = [BigInt.fromString('0'), BigInt.fromString('0')]
+  if (factory === null) {
+    factory = new GSFactory(FACTORY_ADDRESS)
+    factory.totalVolumeUSD = ZERO_BD
+    factory.totalVolumeETH = ZERO_BD
+    factory.totalLiquidityUSD = ZERO_BD
+    factory.totalLiquidityETH = ZERO_BD
+    factory.totalSuppliedUSD = ZERO_BD
+    factory.totalSuppliedETH = ZERO_BD
+    factory.totalBorrowedUSD = ZERO_BD
+    factory.totalBorrowedETH = ZERO_BD
+    factory.totalCollateralUSD = ZERO_BD
+    factory.totalCollateralETH = ZERO_BD
+    factory.txCount = ZERO_BI
+    factory.poolCount = 0
+  }
 
-  poolCreated.count = event.params.count
-  poolCreated.blockNumber = ZERO_BI
-  poolCreated.oldAccFeeIndex = ZERO_BI
-  poolCreated.newAccFeeIndex = ZERO_BI
-  poolCreated.lastFeeIndex = new BigDecimal(ZERO_BI)
-  poolCreated.borrowedLiquidity = ZERO_BI
-  poolCreated.suppliedLiquidity = ZERO_BI
-  poolCreated.totalCollateral = ZERO_BI
+  factory.poolCount = factory.poolCount + 1
+  factory.save()
 
+  const pool = new PoolEntity(event.params.pool.toHexString())
+
+  pool.address = event.params.pool
+  pool.cfmm = event.params.cfmm
+  pool.implementationID = event.params.protocolId
+  pool.implementation = event.params.implementation
+  pool.symbol = ""
+  pool.name = ""
+  pool.tokens = []
+  pool.txCount = 0
+  pool.createdAtTimestamp = event.block.timestamp
+  pool.createdAtBlock = event.block.number
+  pool.lpTokenBalance = ZERO_BI
+  pool.lpTokenBorrowed = ZERO_BI
+  pool.lpTokenBorrowedPlusInterest = ZERO_BI
+  pool.accFeeIndex = ZERO_BI
+  pool.lpInvariant = ZERO_BI
+  pool.borrowedInvariant = ZERO_BI
 
   // instantiate gamma pool template
   GammaPoolTemplate.create(event.params.pool)
-  poolCreated.save()
-  handlePoolCreatedForOverview(event)
+  pool.save()
 }
 
-function handlePoolCreatedForOverview(event: PoolCreated): void {
-  let overview = GSFactory.load('1') // load in current addresses if its already init
-  if (overview === null) { // init entity and make it have the pool that was just emitted by the event
-    overview = new GSFactory('1')
-    overview.createdPools = [event.params.pool]
-  }
-  else overview.createdPools = overview.createdPools.concat([event.params.pool]) //if already init, append new address
-  overview.totalBorrowed = ZERO_BI
-  overview.totalCollateral = ZERO_BI
-  overview.totalSupplied = ZERO_BI
-  overview.save()
-}

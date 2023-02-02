@@ -6,38 +6,37 @@ type User @entity {
 }
 
 type Token @entity {
-	id: ID! # address of token
-	name: String!
-	symbol: String!
-	decimals: BigInt!
-	totalSupply: BigInt!
-	totalLiquidity: BigDecimal!
-	tradeVolume: BigDecimal!
-	lastPriceUSD: BigDecimal
-	lastPriceBlock: BigInt # not sure
-	txCount: BigInt! # transactions for all pools
+  id: ID! # address of token
+  name: String!
+  symbol: String!
+  decimals: BigInt!
+  totalSupply: BigInt!
+  totalLiquidity: BigDecimal!
+  tradeVolume: BigDecimal!
+  lastPriceUSD: BigDecimal
+  lastPriceBlock: BigInt # not sure
+  txCount: BigInt! # transactions for all pools
 }
-
 
 # pool events
 type Pool @entity {
-	id: ID!
-	address: Bytes! # pool addr
-	cfmm: Bytes! # native pool
-	implementationID: Int! # protocol ID for now
-	implementation: Bytes!
-	symbol: String
-	name: String
-	tokens: [Token!]!
-	txCount: Int!
-	createdAtTimestamp: BigInt!
-	createdAtBlock: BigInt!
-	lpTokenBalance: BigInt!
-	lpTokenBorrowed: BigInt!
-	lpTokenBorrowedPlusInterest: BigInt!
-	accFeeIndex: BigInt!
-	lpInvariant: BigInt!
-	borrowedInvariant: BigInt!
+  id: ID!
+  address: Bytes! # pool addr
+  cfmm: Bytes! # native pool
+  implementationID: Int! # protocol ID for now
+  implementation: Bytes!
+  symbol: String
+  name: String
+  tokens: [Token!]!
+  txCount: Int!
+  createdAtTimestamp: BigInt!
+  createdAtBlock: BigInt!
+  lpTokenBalance: BigInt!
+  lpTokenBorrowed: BigInt!
+  lpTokenBorrowedPlusInterest: BigInt!
+  accFeeIndex: BigInt!
+  lpInvariant: BigInt!
+  borrowedInvariant: BigInt!
 }
 
 type PoolSnapshot @entity {
@@ -72,7 +71,7 @@ type Loan @entity {
   blockNumber: BigInt!
 }
 
-type LoanData @entity {
+type LoanSnapshot @entity {
   id: ID!
   pool: Pool! # address of pool corresponds to id of Pool entity
   tokenId: BigInt!
@@ -87,16 +86,16 @@ type LoanData @entity {
 
 type GSFactory @entity {
   id: ID! # factory address
-	totalVolumeUSD: BigDecimal!
-	totalVolumeETH: BigDecimal!
-	totalLiquidityUSD: BigDecimal!
-	totalLiquidityETH: BigDecimal!
-	totalSuppliedUSD: BigDecimal!
-	totalSuppliedETH: BigDecimal!
-	totalBorrowedUSD: BigDecimal!
-	totalBorrowedETH: BigDecimal!
-	totalCollateralUSD: BigDecimal! # not sure if we need this
-	totalCollateralETH: BigDecimal! # not sure if we need this
-	txCount: BigInt!
-	poolCount: Int!
+  totalVolumeUSD: BigDecimal!
+  totalVolumeETH: BigDecimal!
+  totalLiquidityUSD: BigDecimal!
+  totalLiquidityETH: BigDecimal!
+  totalSuppliedUSD: BigDecimal!
+  totalSuppliedETH: BigDecimal!
+  totalBorrowedUSD: BigDecimal!
+  totalBorrowedETH: BigDecimal!
+  totalCollateralUSD: BigDecimal! # not sure if we need this
+  totalCollateralETH: BigDecimal! # not sure if we need this
+  txCount: BigInt!
+  poolCount: Int!
 }

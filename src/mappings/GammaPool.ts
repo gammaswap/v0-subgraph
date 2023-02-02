@@ -1,6 +1,6 @@
 import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPoolFactory/GammaPool'
-import { GSFactory, PoolSnapshot as PoolDataSchema } from '../../generated/schema'
-import { LoanData as LoanDataSchema } from '../../generated/schema'
+import { GSFactory, PoolSnapshot as PoolSnapshotEntity } from '../../generated/schema'
+import { LoanSnapshot as LoanSnapshotEntity } from '../../generated/schema'
 import { Loan as LoanSchema } from '../../generated/schema'
 import { Pool as PoolSchema } from '../../generated/schema'
 import { GammaPool } from '../../generated/templates/GammaPool/GammaPool'

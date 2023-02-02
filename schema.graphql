@@ -87,22 +87,16 @@ type LoanData @entity {
 
 type GSFactory @entity {
   id: ID! # factory address
-
 	totalVolumeUSD: BigDecimal!
 	totalVolumeETH: BigDecimal!
-
 	totalLiquidityUSD: BigDecimal!
 	totalLiquidityETH: BigDecimal!
-
 	totalSuppliedUSD: BigDecimal!
 	totalSuppliedETH: BigDecimal!
-
 	totalBorrowedUSD: BigDecimal!
 	totalBorrowedETH: BigDecimal!
-
 	totalCollateralUSD: BigDecimal! # not sure if we need this
 	totalCollateralETH: BigDecimal! # not sure if we need this
-
 	txCount: BigInt!
 	poolCount: Int!
 }

@@ -1,8 +1,7 @@
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
 import { GammaPool as GammaPoolTemplate } from '../../generated/templates'
 import { GSFactory, Pool as PoolEntity, Token } from '../../generated/schema'
-import { Address, BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
-import { FACTORY_ADDRESS, ZERO_BD, ZERO_BI } from './helpers'
+import { getPoolTokens, FACTORY_ADDRESS, ZERO_BD, ZERO_BI } from './helpers'
 
 export function handlePoolCreated(event: PoolCreated): void {
   let factory = GSFactory.load(FACTORY_ADDRESS)
@@ -19,12 +18,17 @@ export function handlePoolCreated(event: PoolCreated): void {
     factory.totalBorrowedETH = ZERO_BD
     factory.totalCollateralUSD = ZERO_BD
     factory.totalCollateralETH = ZERO_BD
-    factory.txCount = ZERO_BI
+    factory.txCount = 0
     factory.poolCount = 0
   }
 
   factory.poolCount = factory.poolCount + 1
   factory.save()
+
+  // create or load the token
+  const tokens = getPoolTokens(event)
+  // const symbol = generateSymbol(tokens)
+  // const name = generateName(tokens)
 
   const pool = new PoolEntity(event.params.pool.toHexString())
 

@@ -15,7 +15,9 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mappings/GammaPoolFactory.ts
       entities:
+        - GSFactory
         - Pool
+        - Token
       abis:
         - name: GammaPoolFactory
           file: ./abis/GammaPoolFactory.json

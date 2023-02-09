@@ -9,13 +9,14 @@ type Token @entity {
   id: ID! # address of token
   name: String!
   symbol: String!
-  decimals: BigInt!
+  decimals: Int!
   totalSupply: BigInt!
   totalLiquidity: BigDecimal!
   tradeVolume: BigDecimal!
   lastPriceUSD: BigDecimal
-  lastPriceBlock: BigInt # not sure
-  txCount: BigInt! # transactions for all pools
+  timestamp: BigInt!
+  block: BigInt!
+  txCount: Int! # transactions for all pools
 }
 
 # pool events
@@ -96,6 +97,13 @@ type GSFactory @entity {
   totalBorrowedETH: BigDecimal!
   totalCollateralUSD: BigDecimal! # not sure if we need this
   totalCollateralETH: BigDecimal! # not sure if we need this
-  txCount: BigInt!
+  txCount: Int!
   poolCount: Int!
+}
+
+enum PoolType {
+  UNISWAPV2
+  BALANCER_5050
+  BALANCER_8020
+  SUSHISWAP
 }

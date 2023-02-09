@@ -1,4 +1,23 @@
-import { Address, TypedMap } from "@graphprotocol/graph-ts"
+import { Address, TypedMap, BigDecimal, BigInt } from "@graphprotocol/graph-ts"
+
+export namespace PoolType {
+  export const UNISWAP_V2 = 1
+  export const BALANCER_5050 = 2
+  export const BALANCER_8020 = 3
+  export const SUSHISWAP = 4
+}
+
+export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
+export const UNISWAPV2_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
+export const FACTORY_ADDRESS = '0x862654Cfa91cEfb48A3D55108c353eC2Bca1794A'
+
+export let ZERO_BI = BigInt.fromI32(0)
+export let ONE_BI = BigInt.fromI32(1)
+export let SIX_BI = BigInt.fromI32(6)
+export let SIX_BD = BigDecimal.fromString('6')
+export let ZERO_BD = BigDecimal.fromString('0')
+export let ONE_BD = BigDecimal.fromString('1')
+export let BI_18 = BigInt.fromI32(18)
 
 export let TOKEN_MAP = new TypedMap<Address, string[]>()
 TOKEN_MAP.set(Address.fromString("0x254676d5247b127770ef626D6919d9A19156F5B6"), ["USD Coin", "USDC"])

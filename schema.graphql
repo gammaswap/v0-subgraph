@@ -23,21 +23,21 @@ type Token @entity {
 type Pool @entity {
   id: ID!
   address: Bytes! # pool addr
-  cfmm: Bytes! # native pool
-  implementationID: Int! # protocol ID for now
-  implementation: Bytes!
-  symbol: String
   name: String
-  tokens: [Token!]!
-  txCount: Int!
-  createdAtTimestamp: BigInt!
-  createdAtBlock: BigInt!
+  symbol: String
+  cfmm: Bytes! # native pool
+  implementation: Bytes!
+  implementationID: Int! # protocol ID for now
+  tokens: [String!]!
   lpTokenBalance: BigInt!
   lpTokenBorrowed: BigInt!
   lpTokenBorrowedPlusInterest: BigInt!
-  accFeeIndex: BigInt!
+  accFeeIndex: åBigInt!
   lpInvariant: BigInt!
   borrowedInvariant: BigInt!
+  createdAtTimestamp: BigInt!
+  createdAtBlock: BigInt!
+  txCount: Int!
 }
 
 type PoolSnapshot @entity {

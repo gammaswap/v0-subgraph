@@ -32,7 +32,7 @@ type Pool @entity {
   lpTokenBalance: BigInt!
   lpTokenBorrowed: BigInt!
   lpTokenBorrowedPlusInterest: BigInt!
-  accFeeIndex: åBigInt!
+  accFeeIndex: BigInt!
   lpInvariant: BigInt!
   borrowedInvariant: BigInt!
   createdAtTimestamp: BigInt!

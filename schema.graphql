@@ -9,34 +9,35 @@ type Token @entity {
   id: ID! # address of token
   name: String!
   symbol: String!
-  decimals: BigInt!
+  decimals: Int!
   totalSupply: BigInt!
   totalLiquidity: BigDecimal!
   tradeVolume: BigDecimal!
   lastPriceUSD: BigDecimal
-  lastPriceBlock: BigInt # not sure
-  txCount: BigInt! # transactions for all pools
+  timestamp: BigInt!
+  block: BigInt!
+  txCount: Int! # transactions for all pools
 }
 
 # pool events
 type Pool @entity {
   id: ID!
   address: Bytes! # pool addr
-  cfmm: Bytes! # native pool
-  implementationID: Int! # protocol ID for now
-  implementation: Bytes!
-  symbol: String
   name: String
-  tokens: [Token!]!
-  txCount: Int!
-  createdAtTimestamp: BigInt!
-  createdAtBlock: BigInt!
+  symbol: String
+  cfmm: Bytes! # native pool
+  implementation: Bytes!
+  implementationID: Int! # protocol ID for now
+  tokens: [String!]!
   lpTokenBalance: BigInt!
   lpTokenBorrowed: BigInt!
   lpTokenBorrowedPlusInterest: BigInt!
   accFeeIndex: BigInt!
   lpInvariant: BigInt!
   borrowedInvariant: BigInt!
+  createdAtTimestamp: BigInt!
+  createdAtBlock: BigInt!
+  txCount: Int!
 }
 
 type PoolSnapshot @entity {
@@ -96,6 +97,13 @@ type GSFactory @entity {
   totalBorrowedETH: BigDecimal!
   totalCollateralUSD: BigDecimal! # not sure if we need this
   totalCollateralETH: BigDecimal! # not sure if we need this
-  txCount: BigInt!
+  txCount: Int!
   poolCount: Int!
+}
+
+enum PoolType {
+  UNISWAPV2
+  BALANCER_5050
+  BALANCER_8020
+  SUSHISWAP
 }

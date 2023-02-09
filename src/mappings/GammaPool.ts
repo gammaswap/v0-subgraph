@@ -6,7 +6,7 @@ import { Pool as PoolSchema } from '../../generated/schema'
 import { GammaPool } from '../../generated/templates/GammaPool/GammaPool'
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
-import { ZERO_BD, ZERO_BI } from './helpers'
+import { ZERO_BD, ZERO_BI } from '../constants'
 
 export function handlePoolUpdated(event: PoolUpdated): void {
   // let poolData = new PoolDataSchema(event.transaction.hash.toHex())

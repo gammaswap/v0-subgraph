@@ -1,6 +1,6 @@
 {
-  "name": "position-manager",
-  "version": "1.0.0",
+  "name": "v1-subgraph",
+  "version": "0.5.0",
   "license": "GPL-3.0",
   "scripts": {
     "codegen": "yarn prepare && graph codegen",

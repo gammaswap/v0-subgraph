@@ -77,6 +77,22 @@ type LiquidityPositionSnapshot @entity {
   timestamp: BigInt!
 }
 
+type LiquidityPosition @entity {
+  id: ID!
+  user: User!
+  pool: Pool!
+  history: [LiquidityPositionSnapshot!]!
+}
+
+type LiquidityPositionSnapshot @entity {
+  id: ID!
+  user: User!
+  pool: Pool!
+  LiquidityPosition: LiquidityPosition!
+  block: BigInt!
+  timestamp: BigInt!
+}
+
 type Loan @entity {
   id: ID!
   pool: Pool! # address of pool corresponds to id of Pool entity

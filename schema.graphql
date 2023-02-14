@@ -1,22 +1,17 @@
-type User @entity {
-  id: ID!
-  address: Bytes!
-  depositedPools: [Bytes!]!
-  loans: [BigInt!]!
-}
-
-type Token @entity {
-  id: ID! # address of token
-  name: String!
-  symbol: String!
-  decimals: Int!
-  totalSupply: BigInt!
-  totalLiquidity: BigDecimal!
-  tradeVolume: BigDecimal!
-  lastPriceUSD: BigDecimal
-  timestamp: BigInt!
-  block: BigInt!
-  txCount: Int! # transactions for all pools
+type GSFactory @entity {
+  id: ID! # factory address
+  totalVolumeUSD: BigDecimal!
+  totalVolumeETH: BigDecimal!
+  totalLiquidityUSD: BigDecimal!
+  totalLiquidityETH: BigDecimal!
+  totalSuppliedUSD: BigDecimal!
+  totalSuppliedETH: BigDecimal!
+  totalBorrowedUSD: BigDecimal!
+  totalBorrowedETH: BigDecimal!
+  totalCollateralUSD: BigDecimal! # not sure if we need this
+  totalCollateralETH: BigDecimal! # not sure if we need this
+  txCount: Int!
+  poolCount: Int!
 }
 
 # pool events
@@ -59,6 +54,22 @@ type PoolSnapshot @entity {
   totalCollateral: BigInt!
 }
 
+type LiquidityPosition @entity {
+  id: ID!
+  user: User!
+  pool: Pool!
+  history: [LiquidityPositionSnapshot!]!
+}
+
+type LiquidityPositionSnapshot @entity {
+  id: ID!
+  user: User!
+  pool: Pool!
+  LiquidityPosition: LiquidityPosition!
+  block: BigInt!
+  timestamp: BigInt!
+}
+
 type Loan @entity {
   id: ID!
   pool: Pool! # address of pool corresponds to id of Pool entity
@@ -85,20 +96,32 @@ type LoanSnapshot @entity {
   blockNumber: BigInt!
 }
 
-type GSFactory @entity {
-  id: ID! # factory address
-  totalVolumeUSD: BigDecimal!
-  totalVolumeETH: BigDecimal!
-  totalLiquidityUSD: BigDecimal!
-  totalLiquidityETH: BigDecimal!
-  totalSuppliedUSD: BigDecimal!
-  totalSuppliedETH: BigDecimal!
-  totalBorrowedUSD: BigDecimal!
-  totalBorrowedETH: BigDecimal!
-  totalCollateralUSD: BigDecimal! # not sure if we need this
-  totalCollateralETH: BigDecimal! # not sure if we need this
-  txCount: Int!
-  poolCount: Int!
+type Token @entity {
+  id: ID! # address of token
+  name: String!
+  symbol: String!
+  decimals: Int!
+  totalSupply: BigInt!
+  totalLiquidity: BigDecimal!
+  tradeVolume: BigDecimal!
+  lastPriceUSD: BigDecimal
+  timestamp: BigInt!
+  block: BigInt!
+  txCount: Int! # transactions for all pools
+}
+
+type User @entity {
+  id: ID!
+  address: Bytes!
+  depositedPools: [Bytes!]!
+  loans: [BigInt!]!
+}
+
+type Transaction @entity {
+  id: ID!
+  type: TransactionType!
+  block: BigInt!
+  timestamp: BigInt!
 }
 
 enum PoolType {
@@ -106,4 +129,14 @@ enum PoolType {
   BALANCER_5050
   BALANCER_8020
   SUSHISWAP
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAW
+  BORROW
+  REBALANCE
+  REPAY
+  ADD_LIQUIDITY
+  REMOVE_LIQUIDITY
 }

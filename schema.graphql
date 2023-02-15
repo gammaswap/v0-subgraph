@@ -33,7 +33,10 @@ type Pool @entity {
   createdAtTimestamp: BigInt!
   createdAtBlock: BigInt!
   txCount: Int!
+<<<<<<< HEAD
   history: [PoolSnapshot!]! @derivedFrom(field: "pool")
+=======
+>>>>>>> fab3a94 (feat: deposit validation)
   deposits: [Deposit!]! @derivedFrom(field: "pool")
 }
 
@@ -81,14 +84,14 @@ type LiquidityPosition @entity {
   id: ID!
   user: User!
   pool: Pool!
-  history: [LiquidityPositionSnapshot!]!
+  history: [LiquidityPositionSnapshot!]! @derivedFrom (field: "liquidityPosition")
 }
 
 type LiquidityPositionSnapshot @entity {
   id: ID!
   user: User!
   pool: Pool!
-  LiquidityPosition: LiquidityPosition!
+  liquidityPosition: LiquidityPosition!
   block: BigInt!
   timestamp: BigInt!
 }

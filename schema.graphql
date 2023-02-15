@@ -81,14 +81,16 @@ type LiquidityPosition @entity {
   id: ID!
   user: User!
   pool: Pool!
-  history: [LiquidityPositionSnapshot!]! @derivedFrom (field: "liquidityPosition")
+  closed: Boolean!
+  history: [LiquidityPositionSnapshot!]! @derivedFrom (field: "position")
 }
 
 type LiquidityPositionSnapshot @entity {
   id: ID!
   user: User!
   pool: Pool!
-  liquidityPosition: LiquidityPosition!
+  position: LiquidityPosition!
+  transaction: Transaction!
   block: Int!
   timestamp: Int!
 }

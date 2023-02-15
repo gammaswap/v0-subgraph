@@ -50,8 +50,30 @@ export function handleDeposit(event: Deposit): void {
   deposit.block = event.block.number
   deposit.timestamp = event.block.timestamp
 
+  // handle creation and update of user's liquidity position
+  let userLiquidityPosition = getOrCreateLiquidityPosition(pool, event.params.to)
+
+  // handle creation of liquidity position snapshot
+  // createLiquidityPositionSnapshot(userLiquidityPosition, event)
+
+
   deposit.save()
 }
+
+function getOrCreateLiquidityPosition(pool: PoolEntity, userAddress: Address): LiquidityPosition {
+  let id = pool.id.concat("-").concat(userAddress.toHexString())
+  let position = LiquidityPosition.load(id)
+  if (position != null) {
+    return position as LiquidityPosition
+  }
+
+  position = new LiquidityPosition(id)
+  position.pool = pool.id
+  position.user = getOrCreateUser(userAddress).id
+  position.save()
+  return position as LiquidityPosition
+}
+
 export function handleLoanCreated(event: LoanCreated): void {
 //   let loan = new LoanSchema(event.params.tokenId.toString())
 //   loan.tokenId = event.params.tokenId

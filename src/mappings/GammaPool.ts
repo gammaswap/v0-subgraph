@@ -1,12 +1,18 @@
 import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPoolFactory/GammaPool'
-import { GSFactory, PoolSnapshot as PoolSnapshotEntity } from '../../generated/schema'
-import { LoanSnapshot as LoanSnapshotEntity } from '../../generated/schema'
-import { Loan as LoanSchema } from '../../generated/schema'
-import { Pool as PoolSchema } from '../../generated/schema'
-import { GammaPool } from '../../generated/templates/GammaPool/GammaPool'
-import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
+import { Deposit, GammaPool } from '../../generated/templates/GammaPool/GammaPool'
+import { Address } from '@graphprotocol/graph-ts'
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
 import { ZERO_BD, ZERO_BI } from '../constants'
+import { getOrCreateUser } from "./helpers"
+import {
+  GSFactory,
+  LiquidityPosition,
+  Pool as PoolEntity,
+  PoolSnapshot as PoolSnapshotEntity,
+  Loan as LoanEntity,
+  LoanSnapshot as LoanSnapshotEntity,
+  Deposit as DepositEntity
+} from '../../generated/schema'
 
 export function handlePoolUpdated(event: PoolUpdated): void {
   // let poolData = new PoolDataSchema(event.transaction.hash.toHex())
@@ -32,6 +38,20 @@ export function handleLoanUpdated(event: LoanUpdated): void {
   // initLoan(loan, event)
 }
 
+export function handleDeposit(event: Deposit): void {
+  let deposit = new DepositEntity(event.transaction.hash.toHexString())
+  let pool = PoolEntity.load(event.address.toHexString()) as PoolEntity
+  let user = getOrCreateUser(event.params.to)
+
+  deposit.user = user.id
+  deposit.pool = pool.id
+  deposit.assets = event.params.assets
+  deposit.shares = event.params.shares
+  deposit.block = event.block.number
+  deposit.timestamp = event.block.timestamp
+
+  deposit.save()
+}
 export function handleLoanCreated(event: LoanCreated): void {
 //   let loan = new LoanSchema(event.params.tokenId.toString())
 //   loan.tokenId = event.params.tokenId

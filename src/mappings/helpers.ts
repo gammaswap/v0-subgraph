@@ -1,7 +1,11 @@
-import { Address, ethereum, BigInt, log } from "@graphprotocol/graph-ts"
-import { Pool, Token } from "../../generated/schema"
 import { PoolCreated as PoolCreatedEvent } from "../../generated/GammaPoolFactory/GammaPoolFactory"
+import { Address, ethereum, BigInt } from "@graphprotocol/graph-ts"
 import { TOKEN_MAP, PoolType, ZERO_BI, ZERO_BD } from "../constants"
+import {
+  Pool as PoolEntity,
+  Token as TokenEntity,
+  User as UserEntity
+} from "../../generated/schema"
 
 // TODO: adjust types
 export function calcLPTokenBorrowedPlusInterest(
@@ -17,14 +21,26 @@ export function calcLPTokenBorrowedPlusInterest(
   return ZERO_BI
 }
 
-export function getOrCreateERC20Token(event: ethereum.Event, address: Address): Token {
+export function getOrCreateUser(address: Address): UserEntity {
   let addressHex = address.toHexString()
-  let token = Token.load(addressHex)
-  if (token != null) {
-    return token as Token
+  let user = UserEntity.load(addressHex)
+  if (user != null) {
+    return user as UserEntity
   }
 
-  token = new Token(addressHex)
+  user = new UserEntity(addressHex)
+  user.save()
+  return user as UserEntity
+}
+
+export function getOrCreateERC20Token(event: ethereum.Event, address: Address): TokenEntity {
+  let addressHex = address.toHexString()
+  let token = TokenEntity.load(addressHex)
+  if (token != null) {
+    return token as TokenEntity
+  }
+
+  token = new TokenEntity(addressHex)
   
   let tokenInfo = getTokenInfo(address)
   token.name = tokenInfo[0]
@@ -39,12 +55,12 @@ export function getOrCreateERC20Token(event: ethereum.Event, address: Address): 
   token.txCount = 0
   token.save()
 
-  return token as Token
+  return token as TokenEntity
 }
 
-export function getPoolTokens(event: PoolCreatedEvent): Token[] {
+export function getPoolTokens(event: PoolCreatedEvent): TokenEntity[] {
   let tokenLength = event.params.tokens.length
-  let tokens = [] as Token[]
+  let tokens = [] as TokenEntity[]
 
   for (let i: i32 = 0; i < tokenLength; i++) {
     let token = getOrCreateERC20Token(event, event.params.tokens[i])
@@ -63,7 +79,7 @@ function getTokenInfo(address: Address): string[] {
   return ["TOKEN", "TKN"]
 }
 
-export function generatePoolSymbol(tokens: Token[]): string {
+export function generatePoolSymbol(tokens: TokenEntity[]): string {
   let symbol = ""
   for (let i: i32 = 0; i < tokens.length; i++) {
     symbol = symbol + tokens[i].symbol

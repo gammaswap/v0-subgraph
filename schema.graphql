@@ -59,14 +59,16 @@ type LiquidityPosition @entity {
   id: ID!
   user: User!
   pool: Pool!
-  history: [LiquidityPositionSnapshot!]! @derivedFrom (field: "liquidityPosition")
+  closed: Boolean!
+  history: [LiquidityPositionSnapshot!]! @derivedFrom (field: "position")
 }
 
 type LiquidityPositionSnapshot @entity {
   id: ID!
   user: User!
   pool: Pool!
-  liquidityPosition: LiquidityPosition!
+  position: LiquidityPosition!
+  transaction: Transaction!
   block: Int!
   timestamp: Int!
 }
@@ -128,7 +130,12 @@ type User @entity {
 }
 
 type Transaction @entity {
-  id: ID!
+  id: ID! # {user}{transactionHash}{logIndex}
+  txhash: Bytes!
+  pool: Pool!
+  poolSnapshot: PoolSnapshot!
+  from: User!
+  to: User
   type: TransactionType!
   block: BigInt!
   timestamp: BigInt!
@@ -142,11 +149,16 @@ enum PoolType {
 }
 
 enum TransactionType {
-  DEPOSIT
-  WITHDRAW
-  BORROW
-  REBALANCE
-  REPAY
-  ADD_LIQUIDITY
-  REMOVE_LIQUIDITY
+  DEPOSIT_LIQUIDITY
+  WITHDRAW_LIQUIDITY
+  DEPOSIT_RESERVES
+  WITHDRAW_RESERVES
+  INCREASE_COLLATERAL
+  DECREASE_COLLATERAL
+  REBALANCE_COLLATERAL
+  BORROW_LIQUIDITY
+  REPAY_LIQUIDITY
+  LIQUIDATE
+  LIQUIDATE_WITH_LP
+  BATCH_LIQUIDATION
 }

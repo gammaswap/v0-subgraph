@@ -67,8 +67,8 @@ type LiquidityPositionSnapshot @entity {
   user: User!
   pool: Pool!
   liquidityPosition: LiquidityPosition!
-  block: BigInt!
-  timestamp: BigInt!
+  block: Int!
+  timestamp: Int!
 }
 
 type Loan @entity {

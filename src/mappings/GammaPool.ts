@@ -1,6 +1,6 @@
 import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPoolFactory/GammaPool'
 import { Deposit, GammaPool } from '../../generated/templates/GammaPool/GammaPool'
-import { Address } from '@graphprotocol/graph-ts'
+import { Address, ethereum } from '@graphprotocol/graph-ts'
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
 import { ZERO_BD, ZERO_BI } from '../constants'
 import { getOrCreateUser } from "./helpers"
@@ -11,7 +11,8 @@ import {
   PoolSnapshot as PoolSnapshotEntity,
   Loan as LoanEntity,
   LoanSnapshot as LoanSnapshotEntity,
-  Deposit as DepositEntity
+  Deposit as DepositEntity,
+  LiquidityPositionSnapshot
 } from '../../generated/schema'
 
 export function handlePoolUpdated(event: PoolUpdated): void {
@@ -49,15 +50,13 @@ export function handleDeposit(event: Deposit): void {
   deposit.shares = event.params.shares
   deposit.block = event.block.number
   deposit.timestamp = event.block.timestamp
-
-  // handle creation and update of user's liquidity position
-  let userLiquidityPosition = getOrCreateLiquidityPosition(pool, event.params.to)
-
-  // handle creation of liquidity position snapshot
-  // createLiquidityPositionSnapshot(userLiquidityPosition, event)
-
-
   deposit.save()
+
+  // handle creation and update of user's liquidity position & snapshot
+  let userLiquidityPosition = getOrCreateLiquidityPosition(pool, event.params.to)
+  createLiquidityPositionSnapshot(userLiquidityPosition, event)
+
+  // updating usage metrics and global GammaSwap data
 }
 
 function getOrCreateLiquidityPosition(pool: PoolEntity, userAddress: Address): LiquidityPosition {
@@ -72,6 +71,21 @@ function getOrCreateLiquidityPosition(pool: PoolEntity, userAddress: Address): L
   position.user = getOrCreateUser(userAddress).id
   position.save()
   return position as LiquidityPosition
+}
+
+function createLiquidityPositionSnapshot(position: LiquidityPosition, event: ethereum.Event): void {
+  let timestamp = event.block.timestamp.toI32()
+  let id = position.id.concat("-").concat(timestamp.toString())
+  let pool = PoolEntity.load(position.pool)
+
+  let snapshot = new LiquidityPositionSnapshot(id)
+  snapshot.liquidityPosition = position.id
+  snapshot.user = position.user
+  snapshot.pool = position.pool
+  snapshot.timestamp = timestamp
+  snapshot.block = event.block.number.toI32()
+
+  snapshot.save()
 }
 
 export function handleLoanCreated(event: LoanCreated): void {

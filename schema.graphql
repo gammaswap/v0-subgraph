@@ -56,7 +56,7 @@ type PoolSnapshot @entity {
 }
 
 type LiquidityPosition @entity {
-  id: ID!
+  id: ID! # {userAddress}{poolAddress}{positionType}
   user: User!
   pool: Pool!
   closed: Boolean!
@@ -64,13 +64,13 @@ type LiquidityPosition @entity {
 }
 
 type LiquidityPositionSnapshot @entity {
-  id: ID!
+  id: ID! # {liquidityPositionID}{timestamp}
   user: User!
   pool: Pool!
   position: LiquidityPosition!
   transaction: Transaction!
-  block: Int!
-  timestamp: Int!
+  block: BigInt!
+  timestamp: BigInt!
 }
 
 type Loan @entity {
@@ -114,11 +114,12 @@ type Token @entity {
 }
 
 type Deposit @entity {
-  id: ID!
-  user: User!
+  id: ID! # {pool}{transactionHash}
   pool: Pool!
-  assets: BigInt!
-  shares: BigInt!  
+  from: User
+  to: User
+  assets: BigInt # CFMM LP tokens deposited
+  shares: BigInt # GS LP tokens minted to user
   block: BigInt!
   timestamp: BigInt!
 }
@@ -133,12 +134,13 @@ type Transaction @entity {
   id: ID! # {user}{transactionHash}{logIndex}
   txhash: Bytes!
   pool: Pool!
-  poolSnapshot: PoolSnapshot!
+  # poolSnapshot: PoolSnapshot!
   from: User!
   to: User
   type: TransactionType!
   block: BigInt!
   timestamp: BigInt!
+  txIndexInBlock: BigInt!
 }
 
 enum PoolType {

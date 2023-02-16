@@ -1,10 +1,13 @@
 import { PoolCreated as PoolCreatedEvent } from "../../generated/GammaPoolFactory/GammaPoolFactory"
 import { Address, ethereum, BigInt } from "@graphprotocol/graph-ts"
-import { TOKEN_MAP, PoolType, ZERO_BI, ZERO_BD } from "../constants"
+import { TOKEN_MAP, PoolType, ZERO_BI, ZERO_BD, TransactionType} from "../constants"
 import {
   Pool as PoolEntity,
   Token as TokenEntity,
-  User as UserEntity
+  LiquidityPosition as LiquidityPositionEntity,
+  LiquidityPositionSnapshot as LiquidityPositionSnapshotEntity,
+  User as UserEntity,
+  Transaction as TransactionEntity,
 } from "../../generated/schema"
 
 // TODO: adjust types
@@ -19,6 +22,67 @@ export function calcLPTokenBorrowedPlusInterest(
   }
 
   return ZERO_BI
+}
+
+export function LPIntoPool(event: ethereum.Event, user: UserEntity, pool: PoolEntity): LiquidityPositionEntity {
+  // let poolSnapshot = createPoolSnapshot(event, pool)
+
+  let txID = user.id.concat("-").concat(event.transaction.hash.toHexString()).concat("-").concat(event.logIndex.toHexString())
+  let transaction = new TransactionEntity(txID)
+  transaction.txhash = event.transaction.hash
+  transaction.pool = pool.id
+  // transaction.poolSnapshot = poolSnapshot.id
+  transaction.type = TransactionType.DEPOSIT_LIQUIDITY
+  transaction.from = getOrCreateUser(event.transaction.from).id
+  if (event.transaction.to) {
+    transaction.to = getOrCreateUser(event.transaction.to as Address).id
+  }
+  transaction.block = event.block.number
+  transaction.timestamp = event.block.timestamp
+  transaction.txIndexInBlock = event.transaction.index
+  transaction.save()
+
+  // handle creation and update of user's liquidity position & snapshot
+  let position = getOrCreateLiquidityPosition(event, pool, user, transaction.type)
+  createLiquidityPositionSnapshot(position, transaction)
+  
+  // update token balances and data
+  // check if position is closed
+  
+  position.save()
+
+  return position as LiquidityPositionEntity
+}
+
+// export function borrowFromPool() {}
+
+function getOrCreateLiquidityPosition(event: ethereum.Event, pool: PoolEntity, user: UserEntity, positionType: string): LiquidityPositionEntity {
+  let id = user.id.concat("-").concat(pool.id).concat("-").concat(positionType)
+  let position = LiquidityPositionEntity.load(id)
+  if (position != null) {
+    return position as LiquidityPositionEntity
+  }
+
+  position = new LiquidityPositionEntity(id)
+  position.user = user.id
+  position.pool = pool.id
+  position.closed = false
+  position.save()
+  return position as LiquidityPositionEntity
+}
+
+function createLiquidityPositionSnapshot(position: LiquidityPositionEntity, transaction: TransactionEntity): void {
+  let id = position.id.concat("-").concat(transaction.timestamp.toString())
+
+  let snapshot = new LiquidityPositionSnapshotEntity(id)
+  snapshot.user = position.user
+  snapshot.pool = position.pool
+  snapshot.position = position.id
+  snapshot.transaction = transaction.id
+  snapshot.timestamp = transaction.timestamp
+  snapshot.block = transaction.block
+
+  snapshot.save()
 }
 
 export function getOrCreateUser(address: Address): UserEntity {

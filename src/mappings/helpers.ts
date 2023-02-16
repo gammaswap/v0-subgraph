@@ -4,6 +4,7 @@ import { TOKEN_MAP, PoolType, ZERO_BI, ZERO_BD, TransactionType} from "../consta
 import {
   Pool as PoolEntity,
   Token as TokenEntity,
+  PoolSnapshot as PoolSnapshotEntity,
   LiquidityPosition as LiquidityPositionEntity,
   LiquidityPositionSnapshot as LiquidityPositionSnapshotEntity,
   User as UserEntity,

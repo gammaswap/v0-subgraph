@@ -78,7 +78,7 @@ type LiquidityPositionSnapshot @entity {
 }
 
 type LiquidityPosition @entity {
-  id: ID!
+  id: ID! # {userAddress}{poolAddress}{positionType}
   user: User!
   pool: Pool!
   closed: Boolean!
@@ -86,13 +86,13 @@ type LiquidityPosition @entity {
 }
 
 type LiquidityPositionSnapshot @entity {
-  id: ID!
+  id: ID! # {liquidityPositionID}{timestamp}
   user: User!
   pool: Pool!
   position: LiquidityPosition!
   transaction: Transaction!
-  block: Int!
-  timestamp: Int!
+  block: BigInt!
+  timestamp: BigInt!
 }
 
 type Loan @entity {

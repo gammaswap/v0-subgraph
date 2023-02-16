@@ -4,7 +4,6 @@ import { TOKEN_MAP, PoolType, ZERO_BI, ZERO_BD, TransactionType} from "../consta
 import {
   Pool as PoolEntity,
   Token as TokenEntity,
-  PoolSnapshot as PoolSnapshotEntity,
   LiquidityPosition as LiquidityPositionEntity,
   LiquidityPositionSnapshot as LiquidityPositionSnapshotEntity,
   User as UserEntity,
@@ -26,11 +25,14 @@ export function calcLPTokenBorrowedPlusInterest(
 }
 
 export function LPIntoPool(event: ethereum.Event, user: UserEntity, pool: PoolEntity): LiquidityPositionEntity {
+  // let poolSnapshot = createPoolSnapshot(event, pool)
+
   let txID = user.id.concat("-").concat(event.transaction.hash.toHexString()).concat("-").concat(event.logIndex.toHexString())
   let transaction = new TransactionEntity(txID)
   transaction.txhash = event.transaction.hash
   transaction.pool = pool.id
-  transaction.type = TransactionType.DEPOSIT_RESERVES
+  // transaction.poolSnapshot = poolSnapshot.id
+  transaction.type = TransactionType.DEPOSIT_LIQUIDITY
   transaction.from = getOrCreateUser(event.transaction.from).id
   if (event.transaction.to) {
     transaction.to = getOrCreateUser(event.transaction.to as Address).id
@@ -52,31 +54,7 @@ export function LPIntoPool(event: ethereum.Event, user: UserEntity, pool: PoolEn
   return position as LiquidityPositionEntity
 }
 
-function createPoolSnapshot(event: ethereum.Event, pool: PoolEntity): PoolSnapshotEntity {
-  let id = pool.id.concat("-").concat(event.block.timestamp.toString())
-  let snapshot = PoolSnapshotEntity.load(id)
-  if (snapshot != null) {
-    return snapshot as PoolSnapshotEntity
-  }
-
-  snapshot = new PoolSnapshotEntity(id)
-  snapshot.address = Address.fromString(pool.id)
-  snapshot.pool = pool.id
-  snapshot.lpTokenBalance = pool.lpTokenBalance
-  snapshot.lpTokenBorrowed = pool.lpTokenBorrowed
-  snapshot.lpTokenBorrowedPlusInterest = pool.lpTokenBorrowedPlusInterest
-  snapshot.accFeeIndex = pool.accFeeIndex
-  snapshot.lpInvariant = pool.lpInvariant
-  snapshot.borrowedInvariant = pool.borrowedInvariant
-  snapshot.block = event.block.number
-  snapshot.timestamp = event.block.timestamp
-  snapshot.save()
-
-  return snapshot as PoolSnapshotEntity
-}
-
 // export function borrowFromPool() {}
-// export function updatePool() {}
 
 function getOrCreateLiquidityPosition(event: ethereum.Event, pool: PoolEntity, user: UserEntity, positionType: string): LiquidityPositionEntity {
   let id = user.id.concat("-").concat(pool.id).concat("-").concat(positionType)

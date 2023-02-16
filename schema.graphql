@@ -33,26 +33,30 @@ type Pool @entity {
   createdAtTimestamp: BigInt!
   createdAtBlock: BigInt!
   txCount: Int!
+  history: [PoolSnapshot!]! @derivedFrom(field: "pool")
   deposits: [Deposit!]! @derivedFrom(field: "pool")
 }
 
 type PoolSnapshot @entity {
   id: ID!
   address: Bytes! # address
+  pool: Pool!
   lpTokenBalance: BigInt!
   lpTokenBorrowed: BigInt!
   lpTokenBorrowedPlusInterest: BigInt!
-  lpTokenTotal: BigInt!
+  accFeeIndex: BigInt!
   lpInvariant: BigInt!
   borrowedInvariant: BigInt!
-  lpTotalInvariant: BigInt!
-  lpUtilizationRate: BigDecimal!
-  suppliedLiquidity: BigInt!
-  borrowedLiquidity: BigInt!
-  lastBlockNumber: BigInt!
-  blockNumber: BigInt!
-  price: BigInt!
-  totalCollateral: BigInt!
+  # lpTokenTotal: BigInt!
+  # lpTotalInvariant: BigInt!
+  # lpUtilizationRate: BigDecimal!
+  # suppliedLiquidity: BigInt!
+  # borrowedLiquidity: BigInt!
+  # totalCollateral: BigInt!
+  # lastBlockNumber: BigInt!
+  # price: BigInt!
+  block: BigInt!
+  timestamp: BigInt!
 }
 
 type LiquidityPosition @entity {
@@ -134,7 +138,6 @@ type Transaction @entity {
   id: ID! # {user}{transactionHash}{logIndex}
   txhash: Bytes!
   pool: Pool!
-  # poolSnapshot: PoolSnapshot!
   from: User!
   to: User
   type: TransactionType!

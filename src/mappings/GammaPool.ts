@@ -17,7 +17,6 @@ import {
 
 function getOrCreateDeposit(event: DepositEvent, pool: PoolEntity): DepositEntity {
   let depositId = pool.id.concat("-").concat(event.transaction.hash.toHexString())
-  log.warning("DEPOSIT ID: {}", [depositId])
   let deposit = DepositEntity.load(depositId)
   if (deposit != null) {
     return deposit as DepositEntity

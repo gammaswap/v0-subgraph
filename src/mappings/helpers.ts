@@ -32,7 +32,7 @@ export function LPIntoPool(event: ethereum.Event, user: UserEntity, pool: PoolEn
   transaction.txhash = event.transaction.hash
   transaction.pool = pool.id
   // transaction.poolSnapshot = poolSnapshot.id
-  transaction.type = TransactionType.DEPOSIT_LIQUIDITY
+  transaction.type = TransactionType.DEPOSIT_RESERVES
   transaction.from = getOrCreateUser(event.transaction.from).id
   if (event.transaction.to) {
     transaction.to = getOrCreateUser(event.transaction.to as Address).id

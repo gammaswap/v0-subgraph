@@ -63,6 +63,7 @@ type LiquidityPosition @entity {
   id: ID! # {userAddress}{poolAddress}{positionType}
   user: User!
   pool: Pool!
+  liquidityBalance: BigInt! # most recent user's pool LP balance
   closed: Boolean!
   history: [LiquidityPositionSnapshot!]! @derivedFrom (field: "position")
 }
@@ -73,6 +74,12 @@ type LiquidityPositionSnapshot @entity {
   pool: Pool!
   position: LiquidityPosition!
   transaction: Transaction!
+  liquidityBalance: BigInt! # snapshot of user's pool LP balance
+  # snapshot of pool stats
+  tokensPriceUSD: [BigDecimal!]!
+  tokenReserves: [BigDecimal!]!
+  poolReservesUSD: BigDecimal!
+  poolTokenSupply: BigDecimal!
   block: BigInt!
   timestamp: BigInt!
 }

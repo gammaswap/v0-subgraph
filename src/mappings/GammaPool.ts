@@ -2,10 +2,10 @@ import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPool
 import { Deposit as DepositEvent, GammaPool } from '../../generated/templates/GammaPool/GammaPool'
 import { Address, ethereum, log } from '@graphprotocol/graph-ts'
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
-import { ZERO_BD, ZERO_BI } from '../constants'
-import { getOrCreateUser, LPIntoPool } from "./helpers"
+import { FACTORY_ADDRESS, ZERO_BD, ZERO_BI } from '../constants'
+import { getOrCreateERC20Token, getOrCreateUser, LPIntoPool } from "./helpers"
 import {
-  GSFactory,
+  GSFactory as GSFactoryEntity,
   User as UserEntity,
   LiquidityPosition as LiquidityPositionEntity,
   Pool as PoolEntity,
@@ -35,13 +35,31 @@ function getOrCreateDeposit(event: DepositEvent, pool: PoolEntity): DepositEntit
 
 function createOrUpdatePositionOnDeposit(event: DepositEvent, pool: PoolEntity, deposit: DepositEntity): void {
   let user = getOrCreateUser(event.params.to)
+  let gammaswap = GSFactoryEntity.load(FACTORY_ADDRESS) as GSFactoryEntity
 
   // update token balances and data
+  let token0 = getOrCreateERC20Token(event, Address.fromString(pool.tokens[0]))
+  let token1 = getOrCreateERC20Token(event, Address.fromString(pool.tokens[1]))
+
+  // update txn counts
+  token0.txCount = token0.txCount + 1
+  token1.txCount = token1.txCount + 1
+  pool.txCount = pool.txCount + 1
+  gammaswap.txCount = gammaswap.txCount + 1
+
+  token0.save()
+  token1.save()
+  pool.save()
+  gammaswap.save()
 
   LPIntoPool(event, user, pool)
 
   // updating usage metrics and global GammaSwap data
-  // updatePool()
+  // updateGammaswapDayData(event)
+  // updatePoolDayData(event)
+  // updatePoolHourData(event)
+  // updateTokenDayData(token0 as TokenEntity, event)
+  // updateTokenDayData(token1 as TokenEntity, event)
 }
 
 // MAIN EVENT HANDLERS

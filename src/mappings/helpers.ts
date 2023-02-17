@@ -1,6 +1,7 @@
 import { PoolCreated as PoolCreatedEvent } from "../../generated/GammaPoolFactory/GammaPoolFactory"
+import { Deposit as DepositEvent } from "../../generated/templates/GammaPool/GammaPool"
 import { Address, ethereum, BigInt } from "@graphprotocol/graph-ts"
-import { TOKEN_MAP, PoolType, ZERO_BI, ZERO_BD, TransactionType} from "../constants"
+import { TOKEN_MAP, PoolType, ZERO_BI, ZERO_BD, TransactionType, ONE_BD} from "../constants"
 import {
   Pool as PoolEntity,
   Token as TokenEntity,
@@ -25,7 +26,7 @@ export function calcLPTokenBorrowedPlusInterest(
   return ZERO_BI
 }
 
-export function LPIntoPool(event: ethereum.Event, user: UserEntity, pool: PoolEntity): LiquidityPositionEntity {
+export function LPIntoPool(event: DepositEvent, user: UserEntity, pool: PoolEntity): LiquidityPositionEntity {
   let txID = user.id.concat("-").concat(event.transaction.hash.toHexString()).concat("-").concat(event.logIndex.toHexString())
   let transaction = new TransactionEntity(txID)
   transaction.txhash = event.transaction.hash
@@ -78,16 +79,18 @@ function createPoolSnapshot(event: ethereum.Event, pool: PoolEntity): PoolSnapsh
 // export function borrowFromPool() {}
 // export function updatePool() {}
 
-function getOrCreateLiquidityPosition(event: ethereum.Event, pool: PoolEntity, user: UserEntity, positionType: string): LiquidityPositionEntity {
+function getOrCreateLiquidityPosition(event: DepositEvent, pool: PoolEntity, user: UserEntity, positionType: string): LiquidityPositionEntity {
   let id = user.id.concat("-").concat(pool.id).concat("-").concat(positionType)
   let position = LiquidityPositionEntity.load(id)
   if (position != null) {
+    position.liquidityBalance = position.liquidityBalance.plus(event.params.shares)
     return position as LiquidityPositionEntity
   }
 
   position = new LiquidityPositionEntity(id)
   position.user = user.id
   position.pool = pool.id
+  position.liquidityBalance = event.params.shares
   position.closed = false
   position.save()
   return position as LiquidityPositionEntity
@@ -101,6 +104,14 @@ function createLiquidityPositionSnapshot(position: LiquidityPositionEntity, tran
   snapshot.pool = position.pool
   snapshot.position = position.id
   snapshot.transaction = transaction.id
+  snapshot.liquidityBalance = position.liquidityBalance
+  
+  // TODO
+  snapshot.tokensPriceUSD = []
+  snapshot.tokenReserves = []
+  snapshot.poolReservesUSD = ONE_BD
+  snapshot.poolTokenSupply = ONE_BD
+  
   snapshot.timestamp = transaction.timestamp
   snapshot.block = transaction.block
 

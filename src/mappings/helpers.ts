@@ -1,13 +1,12 @@
-import { PoolCreated as PoolCreatedEvent } from "../../generated/GammaPoolFactory/GammaPoolFactory"
 import { Deposit as DepositEvent } from "../../generated/templates/GammaPool/GammaPool"
-import { Address, ethereum, BigInt } from "@graphprotocol/graph-ts"
-import { TOKEN_MAP, PoolType, ZERO_BI, ZERO_BD, TransactionType, ONE_BD} from "../constants"
+import { Address, BigInt } from "@graphprotocol/graph-ts"
+import { ZERO_BI, TransactionType } from "../constants"
+import { getOrCreateLiquidityPosition } from "../functions/liquidity-position"
+import { createLiquidityPositionSnapshot } from "../functions/liquidity-position-snapshot"
+import { getOrCreateUser } from "../functions/user"
 import {
   Pool as PoolEntity,
-  Token as TokenEntity,
-  PoolSnapshot as PoolSnapshotEntity,
   LiquidityPosition as LiquidityPositionEntity,
-  LiquidityPositionSnapshot as LiquidityPositionSnapshotEntity,
   User as UserEntity,
   Transaction as TransactionEntity,
 } from "../../generated/schema"
@@ -53,142 +52,5 @@ export function LPIntoPool(event: DepositEvent, user: UserEntity, pool: PoolEnti
   return position as LiquidityPositionEntity
 }
 
-function createPoolSnapshot(event: ethereum.Event, pool: PoolEntity): PoolSnapshotEntity {
-  let id = pool.id.concat("-").concat(event.block.timestamp.toString())
-  let snapshot = PoolSnapshotEntity.load(id)
-  if (snapshot != null) {
-    return snapshot as PoolSnapshotEntity
-  }
-
-  snapshot = new PoolSnapshotEntity(id)
-  snapshot.address = Address.fromString(pool.id)
-  snapshot.pool = pool.id
-  snapshot.lpTokenBalance = pool.lpTokenBalance
-  snapshot.lpTokenBorrowed = pool.lpTokenBorrowed
-  snapshot.lpTokenBorrowedPlusInterest = pool.lpTokenBorrowedPlusInterest
-  snapshot.accFeeIndex = pool.accFeeIndex
-  snapshot.lpInvariant = pool.lpInvariant
-  snapshot.borrowedInvariant = pool.borrowedInvariant
-  snapshot.block = event.block.number
-  snapshot.timestamp = event.block.timestamp
-  snapshot.save()
-
-  return snapshot as PoolSnapshotEntity
-}
-
 // export function borrowFromPool() {}
 // export function updatePool() {}
-
-function getOrCreateLiquidityPosition(event: DepositEvent, pool: PoolEntity, user: UserEntity, positionType: string): LiquidityPositionEntity {
-  let id = user.id.concat("-").concat(pool.id).concat("-").concat(positionType)
-  let position = LiquidityPositionEntity.load(id)
-  if (position != null) {
-    position.liquidityBalance = position.liquidityBalance.plus(event.params.shares)
-    return position as LiquidityPositionEntity
-  }
-
-  position = new LiquidityPositionEntity(id)
-  position.user = user.id
-  position.pool = pool.id
-  position.liquidityBalance = event.params.shares
-  position.closed = false
-  position.save()
-  return position as LiquidityPositionEntity
-}
-
-function createLiquidityPositionSnapshot(position: LiquidityPositionEntity, transaction: TransactionEntity): void {
-  let id = position.id.concat("-").concat(transaction.timestamp.toString())
-
-  let snapshot = new LiquidityPositionSnapshotEntity(id)
-  snapshot.user = position.user
-  snapshot.pool = position.pool
-  snapshot.position = position.id
-  snapshot.transaction = transaction.id
-  snapshot.liquidityBalance = position.liquidityBalance
-  
-  // TODO
-  snapshot.tokensPriceUSD = []
-  snapshot.tokenReserves = []
-  snapshot.poolReservesUSD = ONE_BD
-  snapshot.poolTokenSupply = ONE_BD
-  
-  snapshot.timestamp = transaction.timestamp
-  snapshot.block = transaction.block
-
-  snapshot.save()
-}
-
-export function getOrCreateUser(address: Address): UserEntity {
-  let addressHex = address.toHexString()
-  let user = UserEntity.load(addressHex)
-  if (user != null) {
-    return user as UserEntity
-  }
-
-  user = new UserEntity(addressHex)
-  user.save()
-  return user as UserEntity
-}
-
-export function getOrCreateERC20Token(event: ethereum.Event, address: Address): TokenEntity {
-  let addressHex = address.toHexString()
-  let token = TokenEntity.load(addressHex)
-  if (token != null) {
-    return token as TokenEntity
-  }
-
-  token = new TokenEntity(addressHex)
-  
-  let tokenInfo = getTokenInfo(address)
-  token.name = tokenInfo[0]
-  token.symbol = tokenInfo[1]
-  token.decimals = 18 // to change
-  token.totalSupply = ZERO_BI // might be a contract call
-  token.totalLiquidity = ZERO_BD
-  token.tradeVolume = ZERO_BD
-  token.lastPriceUSD = ZERO_BD
-  token.block = event.block.number
-  token.timestamp = event.block.timestamp
-  token.txCount = 0
-  token.save()
-
-  return token as TokenEntity
-}
-
-export function getPoolTokens(event: PoolCreatedEvent): TokenEntity[] {
-  let tokenLength = event.params.tokens.length
-  let tokens = [] as TokenEntity[]
-
-  for (let i: i32 = 0; i < tokenLength; i++) {
-    let token = getOrCreateERC20Token(event, event.params.tokens[i])
-    tokens.push(token)
-  }
-
-  return tokens
-}
-
-function getTokenInfo(address: Address): string[] {
-  if (TOKEN_MAP.isSet(address)) {
-    let symbol = TOKEN_MAP.get(address) as string[]
-    return symbol
-  }
-
-  return ["TOKEN", "TKN"]
-}
-
-export function generatePoolSymbol(tokens: TokenEntity[]): string {
-  let symbol = ""
-  for (let i: i32 = 0; i < tokens.length; i++) {
-    symbol = symbol + tokens[i].symbol
-    if (i != tokens.length - 1) symbol = symbol + "/"
-  }
-
-  return symbol
-}
-
-export function generatePoolName(implementationID: number): string {
-  if (implementationID == PoolType.UNISWAP_V2) return "Uniswap V2 Pool"
-  else if (implementationID == PoolType.BALANCER_5050) return "Balancer 50/50 Pool"
-  else if (implementationID == PoolType.BALANCER_8020) return "Balancer 80/20 Pool"
-  else return "SushiSwap Pool"
-}

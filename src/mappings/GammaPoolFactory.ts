@@ -2,7 +2,7 @@ import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
 import { GammaPool as GammaPoolTemplate } from '../../generated/templates'
 import { GSFactory, Pool as PoolEntity } from '../../generated/schema'
 import { FACTORY_ADDRESS, ZERO_BD, ZERO_BI } from "../constants"
-import { getPoolTokens, generatePoolSymbol, generatePoolName } from './helpers'
+import { getPoolTokens, generatePoolSymbol, generatePoolName } from "../functions/pool"
 
 export function handlePoolCreated(event: PoolCreated): void {
   let factory = GSFactory.load(FACTORY_ADDRESS)

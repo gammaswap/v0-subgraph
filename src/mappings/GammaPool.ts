@@ -1,17 +1,13 @@
 import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPoolFactory/GammaPool'
-import { Deposit as DepositEvent, GammaPool } from '../../generated/templates/GammaPool/GammaPool'
-import { Address, ethereum, log } from '@graphprotocol/graph-ts'
-import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
-import { FACTORY_ADDRESS, ZERO_BD, ZERO_BI } from '../constants'
-import { getOrCreateERC20Token, getOrCreateUser, LPIntoPool } from "./helpers"
+import { Deposit as DepositEvent } from '../../generated/templates/GammaPool/GammaPool'
+import { Address, log } from '@graphprotocol/graph-ts'
+import { FACTORY_ADDRESS } from '../constants'
+import { getOrCreateUser } from '../functions/user'
+import { getOrCreateERC20Token } from '../functions/token'
+import { LPIntoPool } from './helpers'
 import {
   GSFactory as GSFactoryEntity,
-  User as UserEntity,
-  LiquidityPosition as LiquidityPositionEntity,
   Pool as PoolEntity,
-  PoolSnapshot as PoolSnapshotEntity,
-  Loan as LoanEntity,
-  LoanSnapshot as LoanSnapshotEntity,
   Deposit as DepositEntity,
 } from '../../generated/schema'
 
@@ -53,13 +49,6 @@ function createOrUpdatePositionOnDeposit(event: DepositEvent, pool: PoolEntity, 
   gammaswap.save()
 
   LPIntoPool(event, user, pool)
-
-  // updating usage metrics and global GammaSwap data
-  // updateGammaswapDayData(event)
-  // updatePoolDayData(event)
-  // updatePoolHourData(event)
-  // updateTokenDayData(token0 as TokenEntity, event)
-  // updateTokenDayData(token1 as TokenEntity, event)
 }
 
 // MAIN EVENT HANDLERS
@@ -72,6 +61,12 @@ export function handleDeposit(event: DepositEvent): void {
   deposit.save()
 
   createOrUpdatePositionOnDeposit(event, pool, deposit)
+  // updating usage metrics and global GammaSwap data
+  // updateGammaswapDayData(event)
+  // updatePoolDayData(event)
+  // updatePoolHourData(event)
+  // updateTokenDayData(token0 as TokenEntity, event)
+  // updateTokenDayData(token1 as TokenEntity, event)
 }
 
 export function handlePoolUpdated(event: PoolUpdated): void {}

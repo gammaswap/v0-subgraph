@@ -1,22 +1,17 @@
-type User @entity {
-  id: ID!
-  address: Bytes!
-  depositedPools: [Bytes!]!
-  loans: [BigInt!]!
-}
-
-type Token @entity {
-  id: ID! # address of token
-  name: String!
-  symbol: String!
-  decimals: Int!
-  totalSupply: BigInt!
-  totalLiquidity: BigDecimal!
-  tradeVolume: BigDecimal!
-  lastPriceUSD: BigDecimal
-  timestamp: BigInt!
-  block: BigInt!
-  txCount: Int! # transactions for all pools
+type GSFactory @entity {
+  id: ID! # factory address
+  totalVolumeUSD: BigDecimal!
+  totalVolumeETH: BigDecimal!
+  totalLiquidityUSD: BigDecimal!
+  totalLiquidityETH: BigDecimal!
+  totalSuppliedUSD: BigDecimal!
+  totalSuppliedETH: BigDecimal!
+  totalBorrowedUSD: BigDecimal!
+  totalBorrowedETH: BigDecimal!
+  totalCollateralUSD: BigDecimal! # not sure if we need this
+  totalCollateralETH: BigDecimal! # not sure if we need this
+  txCount: Int!
+  poolCount: Int!
 }
 
 # pool events
@@ -38,25 +33,48 @@ type Pool @entity {
   createdAtTimestamp: BigInt!
   createdAtBlock: BigInt!
   txCount: Int!
+  history: [PoolSnapshot!]! @derivedFrom(field: "pool")
+  deposits: [Deposit!]! @derivedFrom(field: "pool")
 }
 
 type PoolSnapshot @entity {
   id: ID!
   address: Bytes! # address
+  pool: Pool!
   lpTokenBalance: BigInt!
   lpTokenBorrowed: BigInt!
   lpTokenBorrowedPlusInterest: BigInt!
-  lpTokenTotal: BigInt!
+  accFeeIndex: BigInt!
   lpInvariant: BigInt!
   borrowedInvariant: BigInt!
-  lpTotalInvariant: BigInt!
-  lpUtilizationRate: BigDecimal!
-  suppliedLiquidity: BigInt!
-  borrowedLiquidity: BigInt!
-  lastBlockNumber: BigInt!
-  blockNumber: BigInt!
-  price: BigInt!
-  totalCollateral: BigInt!
+  # lpTokenTotal: BigInt!
+  # lpTotalInvariant: BigInt!
+  # lpUtilizationRate: BigDecimal!
+  # suppliedLiquidity: BigInt!
+  # borrowedLiquidity: BigInt!
+  # totalCollateral: BigInt!
+  # lastBlockNumber: BigInt!
+  # price: BigInt!
+  block: BigInt!
+  timestamp: BigInt!
+}
+
+type LiquidityPosition @entity {
+  id: ID! # {userAddress}{poolAddress}{positionType}
+  user: User!
+  pool: Pool!
+  closed: Boolean!
+  history: [LiquidityPositionSnapshot!]! @derivedFrom (field: "position")
+}
+
+type LiquidityPositionSnapshot @entity {
+  id: ID! # {liquidityPositionID}{timestamp}
+  user: User!
+  pool: Pool!
+  position: LiquidityPosition!
+  transaction: Transaction!
+  block: BigInt!
+  timestamp: BigInt!
 }
 
 type Loan @entity {
@@ -85,20 +103,47 @@ type LoanSnapshot @entity {
   blockNumber: BigInt!
 }
 
-type GSFactory @entity {
-  id: ID! # factory address
-  totalVolumeUSD: BigDecimal!
-  totalVolumeETH: BigDecimal!
-  totalLiquidityUSD: BigDecimal!
-  totalLiquidityETH: BigDecimal!
-  totalSuppliedUSD: BigDecimal!
-  totalSuppliedETH: BigDecimal!
-  totalBorrowedUSD: BigDecimal!
-  totalBorrowedETH: BigDecimal!
-  totalCollateralUSD: BigDecimal! # not sure if we need this
-  totalCollateralETH: BigDecimal! # not sure if we need this
-  txCount: Int!
-  poolCount: Int!
+type Token @entity {
+  id: ID! # address of token
+  name: String!
+  symbol: String!
+  decimals: Int!
+  totalSupply: BigInt!
+  totalLiquidity: BigDecimal!
+  tradeVolume: BigDecimal!
+  lastPriceUSD: BigDecimal
+  timestamp: BigInt!
+  block: BigInt!
+  txCount: Int! # transactions for all pools
+}
+
+type Deposit @entity {
+  id: ID! # {pool}{transactionHash}
+  pool: Pool!
+  from: User
+  to: User
+  assets: BigInt # CFMM LP tokens deposited
+  shares: BigInt # GS LP tokens minted to user
+  block: BigInt!
+  timestamp: BigInt!
+}
+
+type User @entity {
+  id: ID! # user address
+  positions: [LiquidityPosition!]! @derivedFrom(field: "user")
+  loans: [BigInt!]
+}
+
+type Transaction @entity {
+  id: ID! # {user}{transactionHash}{logIndex}
+  txhash: Bytes!
+  pool: Pool!
+  from: User!
+  to: User
+  type: TransactionType!
+  block: BigInt!
+  timestamp: BigInt!
+  txIndexInBlock: BigInt!
 }
 
 enum PoolType {
@@ -106,4 +151,19 @@ enum PoolType {
   BALANCER_5050
   BALANCER_8020
   SUSHISWAP
+}
+
+enum TransactionType {
+  DEPOSIT_LIQUIDITY
+  WITHDRAW_LIQUIDITY
+  DEPOSIT_RESERVES
+  WITHDRAW_RESERVES
+  INCREASE_COLLATERAL
+  DECREASE_COLLATERAL
+  REBALANCE_COLLATERAL
+  BORROW_LIQUIDITY
+  REPAY_LIQUIDITY
+  LIQUIDATE
+  LIQUIDATE_WITH_LP
+  BATCH_LIQUIDATION
 }

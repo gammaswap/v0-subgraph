@@ -53,3 +53,5 @@ templates:
           handler: handleLoanCreated
         - event: LoanUpdated(indexed uint256,uint128[],uint128,uint128,uint256,uint96,indexed uint8)
           handler: handleLoanUpdated
+        - event: Deposit(indexed address,indexed address,uint256,uint256)
+          handler: handleDeposit

@@ -1,29 +1,32 @@
 import { Address, ethereum } from '@graphprotocol/graph-ts'
-import { Token as TokenEntity } from '../../generated/schema'
+import { GSFactory as GSFactoryEntity, Token as TokenEntity } from '../../generated/schema'
 import { ZERO_BD, ZERO_BI } from '../constants'
-import { TOKEN_MAP } from '../constants'
+import { TOKEN_MAP, FACTORY_ADDRESS } from '../constants'
+import { createTokenPrice } from './token-price'
 
-export function getOrCreateERC20Token(event: ethereum.Event, address: Address): TokenEntity {
-  let addressHex = address.toHexString()
-  let token = TokenEntity.load(addressHex)
-  if (token != null) {
-    return token as TokenEntity
-  }
-
-  token = new TokenEntity(addressHex)
+export function getOrCreateToken(address: string): TokenEntity {
+  let token = TokenEntity.load(address)
   
-  let tokenInfo = getTokenInfo(address)
-  token.name = tokenInfo[0]
-  token.symbol = tokenInfo[1]
-  token.decimals = 18 // to change
-  token.totalSupply = ZERO_BI // might be a contract call
-  token.totalLiquidity = ZERO_BD
-  token.tradeVolume = ZERO_BD
-  token.lastPriceUSD = ZERO_BD
-  token.block = event.block.number
-  token.timestamp = event.block.timestamp
-  token.txCount = 0
-  token.save()
+  if (token === null) {
+    token = new TokenEntity(address)
+    createTokenPrice(address)
+    
+    // need to finalize attributes
+    let tokenInfo = getTokenInfo(Address.fromString(address))
+    token.name = tokenInfo[0]
+    token.symbol = tokenInfo[1]
+    token.decimals = 18 // to change
+    token.price = address
+    token.totalSupply = ZERO_BI // might be a contract call
+    token.totalLiquidity = ZERO_BD
+    token.tradeVolume = ZERO_BD
+    token.txCount = 0
+    token.save()
+
+    const gammaswap = GSFactoryEntity.load(FACTORY_ADDRESS) as GSFactoryEntity
+    gammaswap.txCount = gammaswap.txCount + 1
+    gammaswap.save()
+  }
 
   return token as TokenEntity
 }

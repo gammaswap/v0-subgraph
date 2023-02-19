@@ -65,6 +65,8 @@ type LiquidityPosition @entity {
   pool: Pool!
   liquidityBalance: BigInt! # most recent user's pool LP balance
   closed: Boolean!
+  createdAtBlock: BigInt!
+  createdAtTimestamp: BigInt!
   history: [LiquidityPositionSnapshot!]! @derivedFrom (field: "position")
 }
 
@@ -73,7 +75,6 @@ type LiquidityPositionSnapshot @entity {
   user: User!
   pool: Pool!
   position: LiquidityPosition!
-  transaction: Transaction!
   liquidityBalance: BigInt! # snapshot of user's pool LP balance
   # snapshot of pool stats
   tokensPriceUSD: [BigDecimal!]!
@@ -115,13 +116,18 @@ type Token @entity {
   name: String!
   symbol: String!
   decimals: Int!
+  price: TokenPrice!
   totalSupply: BigInt!
   totalLiquidity: BigDecimal!
   tradeVolume: BigDecimal!
-  lastPriceUSD: BigDecimal
-  timestamp: BigInt!
-  block: BigInt!
   txCount: Int! # transactions for all pools
+}
+
+type TokenPrice @entity {
+  id: ID!
+  token: Token!
+  derivedNative: BigDecimal!
+  lastPriceUSD: BigDecimal!
 }
 
 type Deposit @entity {

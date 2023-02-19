@@ -1,27 +1,12 @@
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
 import { GammaPool as GammaPoolTemplate } from '../../generated/templates'
-import { GSFactory, Pool as PoolEntity } from '../../generated/schema'
-import { FACTORY_ADDRESS, ZERO_BD, ZERO_BI } from "../constants"
+import { Pool as PoolEntity } from '../../generated/schema'
+import { ZERO_BI } from "../constants"
 import { getPoolTokens, generatePoolSymbol, generatePoolName } from "../functions/pool"
+import { getOrCreateFactory } from '../functions/factory'
 
 export function handlePoolCreated(event: PoolCreated): void {
-  let factory = GSFactory.load(FACTORY_ADDRESS)
-
-  if (factory === null) {
-    factory = new GSFactory(FACTORY_ADDRESS)
-    factory.totalVolumeUSD = ZERO_BD
-    factory.totalVolumeETH = ZERO_BD
-    factory.totalLiquidityUSD = ZERO_BD
-    factory.totalLiquidityETH = ZERO_BD
-    factory.totalSuppliedUSD = ZERO_BD
-    factory.totalSuppliedETH = ZERO_BD
-    factory.totalBorrowedUSD = ZERO_BD
-    factory.totalBorrowedETH = ZERO_BD
-    factory.totalCollateralUSD = ZERO_BD
-    factory.totalCollateralETH = ZERO_BD
-    factory.txCount = 0
-    factory.poolCount = 0
-  }
+  let factory = getOrCreateFactory()
 
   factory.poolCount = factory.poolCount + 1
   factory.save()

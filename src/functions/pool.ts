@@ -1,6 +1,6 @@
 import { PoolCreated as PoolCreatedEvent } from "../../generated/GammaPoolFactory/GammaPoolFactory"
 import { Token as TokenEntity, Pool as PoolEntity } from "../../generated/schema"
-import { getOrCreateERC20Token } from "../functions/token"
+import { getOrCreateToken } from "../functions/token"
 import { PoolType } from "../constants"
 
 export function getPoolTokens(event: PoolCreatedEvent): TokenEntity[] {
@@ -8,7 +8,7 @@ export function getPoolTokens(event: PoolCreatedEvent): TokenEntity[] {
   let tokens = [] as TokenEntity[]
 
   for (let i: i32 = 0; i < tokenLength; i++) {
-    let token = getOrCreateERC20Token(event, event.params.tokens[i])
+    let token = getOrCreateToken(event.params.tokens[i].toHexString())
     tokens.push(token)
   }
 

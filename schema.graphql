@@ -84,24 +84,6 @@ type LiquidityPositionSnapshot @entity {
   timestamp: BigInt!
 }
 
-type LiquidityPosition @entity {
-  id: ID! # {userAddress}{poolAddress}{positionType}
-  user: User!
-  pool: Pool!
-  closed: Boolean!
-  history: [LiquidityPositionSnapshot!]! @derivedFrom (field: "position")
-}
-
-type LiquidityPositionSnapshot @entity {
-  id: ID! # {liquidityPositionID}{timestamp}
-  user: User!
-  pool: Pool!
-  position: LiquidityPosition!
-  transaction: Transaction!
-  block: BigInt!
-  timestamp: BigInt!
-}
-
 type Loan @entity {
   id: ID!
   pool: Pool! # address of pool corresponds to id of Pool entity

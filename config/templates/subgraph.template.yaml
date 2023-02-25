@@ -47,7 +47,7 @@ templates:
         - name: GammaPoolFactory
           file: ./abis/GammaPoolFactory.json
       eventHandlers:
-        - event: PoolUpdated(uint256,uint256,uint96,uint96,uint256,uint128,uint128,indexed uint8)
+        - event: PoolUpdated(uint256,uint256,uint48,uint96,uint256,uint128,uint128,uint128[],indexed uint8)
           handler: handlePoolUpdated
         - event: LoanCreated(indexed address,uint256)
           handler: handleLoanCreated
@@ -55,3 +55,5 @@ templates:
           handler: handleLoanUpdated
         - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: onDeposit
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: onTransfer

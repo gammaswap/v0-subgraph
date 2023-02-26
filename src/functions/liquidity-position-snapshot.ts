@@ -15,7 +15,7 @@ export function createLiquidityPositionSnapshot(position: LiquidityPositionEntit
   snapshot.user = position.user
   snapshot.pool = position.pool
   snapshot.position = position.id
-  snapshot.liquidityBalance = position.liquidityBalance  
+  snapshot.liquidityBalance = position.liquidityBalance
   snapshot.timestamp = block.timestamp
   snapshot.block = block.number
 

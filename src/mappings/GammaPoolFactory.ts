@@ -47,6 +47,7 @@ export function handlePoolCreated(event: PoolCreated): void {
   pool.createdAtBlock = event.block.number
   pool.createdAtTimestamp = event.block.timestamp
   pool.txCount = 0
+  pool.lpCount = 0
 
   // instantiate gamma pool template
   GammaPoolTemplate.create(event.params.pool)

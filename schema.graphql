@@ -38,6 +38,7 @@ type Pool @entity {
   createdAtTimestamp: BigInt!
   createdAtBlock: BigInt!
   txCount: Int!
+  lpCount: Int!
   history: [PoolSnapshot!]! @derivedFrom(field: "pool")
   deposits: [Deposit!]! @derivedFrom(field: "pool")
 }
@@ -65,14 +66,14 @@ type PoolSnapshot @entity {
 }
 
 type LiquidityPosition @entity {
-  id: ID! # {userAddress}{poolAddress}{positionType}
-  user: User!
+  id: ID! # {poolAddress}{userAddress}
   pool: Pool!
+  user: User!
   liquidityBalance: BigInt! # most recent user's pool LP balance
   closed: Boolean!
+  history: [LiquidityPositionSnapshot!]! @derivedFrom (field: "position")
   createdAtBlock: BigInt!
   createdAtTimestamp: BigInt!
-  history: [LiquidityPositionSnapshot!]! @derivedFrom (field: "position")
 }
 
 type LiquidityPositionSnapshot @entity {
@@ -145,7 +146,7 @@ type Deposit @entity {
 
 type User @entity {
   id: ID! # user address
-  positions: [LiquidityPosition!]! @derivedFrom(field: "user")
+  liquidityPositions: [LiquidityPosition!]! @derivedFrom(field: "user")
   loans: [BigInt!]
 }
 

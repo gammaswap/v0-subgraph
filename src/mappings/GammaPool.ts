@@ -11,7 +11,7 @@ export function onDeposit(event: DepositEvent): void {
   if (deposit !== null) {    
     // handle creation and update of user's liquidity position & snapshot
     let position = getOrCreateLiquidityPosition(event.params.to, event.address, event.block)
-    // updateGSFactorySnapshots(event)
+    // updateFactorySnapshots(event)
     createLiquidityPositionSnapshot(position, event.block)
     // updatePoolSnapshots(event.block.timestamp, event.address)
     // updateTokenSnapshots(event.block.timestamp, event.address)

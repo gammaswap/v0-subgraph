@@ -1,4 +1,3 @@
-import { ONE_BD } from "../constants"
 import { ethereum } from "@graphprotocol/graph-ts"
 import {
   LiquidityPosition as LiquidityPositionEntity,
@@ -16,14 +15,7 @@ export function createLiquidityPositionSnapshot(position: LiquidityPositionEntit
   snapshot.user = position.user
   snapshot.pool = position.pool
   snapshot.position = position.id
-  snapshot.liquidityBalance = position.liquidityBalance
-  
-  // TODO
-  snapshot.tokensPriceUSD = []
-  snapshot.tokenReserves = []
-  snapshot.poolReservesUSD = ONE_BD
-  snapshot.poolTokenSupply = ONE_BD
-  
+  snapshot.liquidityBalance = position.liquidityBalance  
   snapshot.timestamp = block.timestamp
   snapshot.block = block.number
 

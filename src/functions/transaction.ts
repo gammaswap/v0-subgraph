@@ -1,25 +1,26 @@
-import { Address, ethereum } from "@graphprotocol/graph-ts"
-import { TransactionType } from "../constants"
-import { getOrCreateUser } from "../functions/user"
+import { ethereum } from "@graphprotocol/graph-ts"
 import {
   Transaction as TransactionEntity,
 } from "../../generated/schema"
 
 export function createTransaction(event: ethereum.Event): TransactionEntity {
-  let txID = event.transaction.hash.toHex()
+  let id = event.transaction.hash.toHex()
   
-  let transaction = new TransactionEntity(txID)
-  transaction.txhash = event.transaction.hash
-  transaction.pool = event.address.toHexString()
-  transaction.type = TransactionType.DEPOSIT_RESERVES
-  transaction.from = getOrCreateUser(event.transaction.from).id
-  if (event.transaction.to) {
-    transaction.to = getOrCreateUser(event.transaction.to as Address).id
-  }
-  transaction.block = event.block.number
-  transaction.timestamp = event.block.timestamp
-  transaction.txIndexInBlock = event.transaction.index
+  let transaction = new TransactionEntity(id)
+  transaction.deposits = new Array<string>()
+  transaction.createdAtblock = event.block.number
+  transaction.createdAttimestamp = event.block.timestamp
   transaction.save()
+
+  return transaction as TransactionEntity
+}
+
+export function getOrCreateTransaction(event: ethereum.Event): TransactionEntity {
+  let id = event.transaction.hash.toHexString()
+  let transaction = TransactionEntity.load(id)
+  if (transaction == null) {
+    transaction = createTransaction(event)
+  }
 
   return transaction as TransactionEntity
 }

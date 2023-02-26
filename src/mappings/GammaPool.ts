@@ -1,8 +1,10 @@
 import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPoolFactory/GammaPool'
-import { Deposit as DepositEvent } from '../../generated/templates/GammaPool/GammaPool'
+import { Deposit as DepositEvent, Transfer as TransferEvent } from '../../generated/templates/GammaPool/GammaPool'
 import { handleDeposit } from '../deposit'
+import { handleTransfer } from '../transfer'
 import { getOrCreateLiquidityPosition } from '../functions/liquidity-position'
 import { createLiquidityPositionSnapshot } from '../functions/liquidity-position-snapshot'
+import { getOrCreateUser } from '../functions/user'
 
 export function onDeposit(event: DepositEvent): void {
   let deposit = handleDeposit(event)
@@ -20,6 +22,12 @@ export function onDeposit(event: DepositEvent): void {
     // updateTokenDayData(token0 as TokenEntity, event)
     // updateTokenDayData(token1 as TokenEntity, event)  
   }
+}
+
+export function onTransfer(event: TransferEvent): void {
+  getOrCreateUser(event.params.from)
+  getOrCreateUser(event.params.to)
+  handleTransfer(event)
 }
 
 export function handlePoolUpdated(event: PoolUpdated): void {}

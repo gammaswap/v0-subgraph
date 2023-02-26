@@ -16,14 +16,19 @@ type GSFactory @entity {
 
 # pool events
 type Pool @entity {
-  id: ID!
-  address: Bytes! # pool addr
+  id: ID! # pool address
   name: String
   symbol: String
   cfmm: Bytes! # native pool
   implementation: Bytes!
   implementationID: Int! # protocol ID for now
-  tokens: [String!]!
+  tokens: [Token!]!
+  reserves: [BigDecimal!]!
+  prices: [BigDecimal!]!
+  tvl: BigDecimal! # (lpInvariant + borrowedInvariant) * (2 * sqrt(getTokenPrice(token1))) * (getExchangeRate(ethPrice, token1Price)) # 1400 ETH / 1 USDC
+  volume: BigDecimal! # Volume client side
+  feesAccrued: BigDecimal! # FeesAccrued client side
+  borrowAPR: BigDecimal! # BorrowAPR client side
   lpTokenBalance: BigInt!
   lpTokenBorrowed: BigInt!
   lpTokenBorrowedPlusInterest: BigInt!
@@ -41,22 +46,22 @@ type PoolSnapshot @entity {
   id: ID!
   address: Bytes! # address
   pool: Pool!
+  tvl: BigDecimal!
+  volume: BigDecimal!
+  feesAccrued: BigDecimal!
+  borrowAPR: BigDecimal!
+  # tokensPriceUSD: [BigDecimal!]!
+  # tokenReserves: [BigDecimal!]!
+  # poolReservesUSD: BigDecimal!
+  # poolTokenSupply: BigDecimal!
   lpTokenBalance: BigInt!
   lpTokenBorrowed: BigInt!
   lpTokenBorrowedPlusInterest: BigInt!
   accFeeIndex: BigInt!
   lpInvariant: BigInt!
   borrowedInvariant: BigInt!
-  # lpTokenTotal: BigInt!
-  # lpTotalInvariant: BigInt!
-  # lpUtilizationRate: BigDecimal!
-  # suppliedLiquidity: BigInt!
-  # borrowedLiquidity: BigInt!
-  # totalCollateral: BigInt!
-  # lastBlockNumber: BigInt!
-  # price: BigInt!
-  block: BigInt!
   timestamp: BigInt!
+  block: BigInt!
 }
 
 type LiquidityPosition @entity {
@@ -76,11 +81,6 @@ type LiquidityPositionSnapshot @entity {
   pool: Pool!
   position: LiquidityPosition!
   liquidityBalance: BigInt! # snapshot of user's pool LP balance
-  # snapshot of pool stats
-  tokensPriceUSD: [BigDecimal!]!
-  tokenReserves: [BigDecimal!]!
-  poolReservesUSD: BigDecimal!
-  poolTokenSupply: BigDecimal!
   block: BigInt!
   timestamp: BigInt!
 }
@@ -131,12 +131,14 @@ type TokenPrice @entity {
 }
 
 type Deposit @entity {
-  id: ID! # {pool}{transactionHash}
+  id: ID! # {txHash}/{depositCountInTx}
   pool: Pool!
-  from: User
+  transaction: Transaction
+  # populated in transfer event
   to: User
-  assets: BigInt # CFMM LP tokens deposited
-  shares: BigInt # GS LP tokens minted to user
+  shares: BigInt!
+  # populated in deposit event
+  caller: Bytes! # added in deposit event
   block: BigInt!
   timestamp: BigInt!
 }
@@ -148,15 +150,10 @@ type User @entity {
 }
 
 type Transaction @entity {
-  id: ID! # {user}{transactionHash}{logIndex}
-  txhash: Bytes!
-  pool: Pool!
-  from: User!
-  to: User
-  type: TransactionType!
-  block: BigInt!
-  timestamp: BigInt!
-  txIndexInBlock: BigInt!
+  id: ID! # txHash
+  deposits: [Deposit!]!
+  createdAtblock: BigInt!
+  createdAttimestamp: BigInt!
 }
 
 enum PoolType {

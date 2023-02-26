@@ -5,6 +5,31 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "spender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "Approval",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "caller",
         "type": "address"
       },
@@ -28,6 +53,43 @@
       }
     ],
     "name": "Deposit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint128[]",
+        "name": "amounts",
+        "type": "uint128[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "lpTokens",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint128",
+        "name": "liquidity",
+        "type": "uint128"
+      },
+      {
+        "indexed": true,
+        "internalType": "enum IStrategyEvents.TX_TYPE",
+        "name": "txType",
+        "type": "uint8"
+      }
+    ],
+    "name": "ExternalSwap",
     "type": "event"
   },
   {
@@ -158,9 +220,9 @@
       },
       {
         "indexed": false,
-        "internalType": "uint96",
+        "internalType": "uint48",
         "name": "lastBlockNumber",
-        "type": "uint96"
+        "type": "uint48"
       },
       {
         "indexed": false,
@@ -187,6 +249,12 @@
         "type": "uint128"
       },
       {
+        "indexed": false,
+        "internalType": "uint128[]",
+        "name": "cfmmReserves",
+        "type": "uint128[]"
+      },
+      {
         "indexed": true,
         "internalType": "enum IStrategyEvents.TX_TYPE",
         "name": "txType",
@@ -200,19 +268,25 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "oldLpTokenBalance",
-        "type": "uint256"
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "newLpTokenBalance",
+        "name": "amount",
         "type": "uint256"
       }
     ],
-    "name": "Sync",
+    "name": "Transfer",
     "type": "event"
   },
   {
@@ -538,16 +612,6 @@
           },
           {
             "internalType": "address",
-            "name": "cfmm",
-            "type": "address"
-          },
-          {
-            "internalType": "uint96",
-            "name": "LAST_BLOCK_NUMBER",
-            "type": "uint96"
-          },
-          {
-            "internalType": "address",
             "name": "factory",
             "type": "address"
           },
@@ -577,9 +641,24 @@
             "type": "uint128"
           },
           {
+            "internalType": "address",
+            "name": "cfmm",
+            "type": "address"
+          },
+          {
             "internalType": "uint96",
             "name": "accFeeIndex",
             "type": "uint96"
+          },
+          {
+            "internalType": "uint48",
+            "name": "LAST_BLOCK_NUMBER",
+            "type": "uint48"
+          },
+          {
+            "internalType": "uint80",
+            "name": "lastCFMMFeeIndex",
+            "type": "uint80"
           },
           {
             "internalType": "uint128",
@@ -636,6 +715,11 @@
       },
       {
         "internalType": "uint256",
+        "name": "lastCFMMFeeIndex",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "lastBlockNumber",
         "type": "uint256"
       }
@@ -678,6 +762,11 @@
         "internalType": "uint8[]",
         "name": "_decimals",
         "type": "uint8[]"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
       }
     ],
     "name": "initialize",
@@ -696,6 +785,11 @@
         "internalType": "int256[]",
         "name": "deltas",
         "type": "int256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "fees",
+        "type": "uint256[]"
       }
     ],
     "name": "liquidate",
@@ -861,6 +955,11 @@
         "internalType": "uint256",
         "name": "liquidity",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "fees",
+        "type": "uint256[]"
       }
     ],
     "name": "repayLiquidity",
@@ -936,6 +1035,11 @@
         "internalType": "address",
         "name": "_cfmm",
         "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
       }
     ],
     "name": "validateCFMM",

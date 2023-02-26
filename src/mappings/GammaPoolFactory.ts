@@ -1,27 +1,13 @@
 import { PoolCreated } from '../../generated/GammaPoolFactory/GammaPoolFactory'
 import { GammaPool as GammaPoolTemplate } from '../../generated/templates'
-import { GSFactory, Pool as PoolEntity } from '../../generated/schema'
-import { FACTORY_ADDRESS, ZERO_BD, ZERO_BI } from "../constants"
-import { getPoolTokens, generatePoolSymbol, generatePoolName } from './helpers'
+import { Pool as PoolEntity } from '../../generated/schema'
+import { ZERO_BD, ZERO_BI } from "../constants"
+import { getPoolTokens, generatePoolSymbol, generatePoolName } from "../functions/pool"
+import { getOrCreateFactory } from '../functions/factory'
 
 export function handlePoolCreated(event: PoolCreated): void {
-  let factory = GSFactory.load(FACTORY_ADDRESS)
-
-  if (factory === null) {
-    factory = new GSFactory(FACTORY_ADDRESS)
-    factory.totalVolumeUSD = ZERO_BD
-    factory.totalVolumeETH = ZERO_BD
-    factory.totalLiquidityUSD = ZERO_BD
-    factory.totalLiquidityETH = ZERO_BD
-    factory.totalSuppliedUSD = ZERO_BD
-    factory.totalSuppliedETH = ZERO_BD
-    factory.totalBorrowedUSD = ZERO_BD
-    factory.totalBorrowedETH = ZERO_BD
-    factory.totalCollateralUSD = ZERO_BD
-    factory.totalCollateralETH = ZERO_BD
-    factory.txCount = 0
-    factory.poolCount = 0
-  }
+  let factory = getOrCreateFactory()
+  let id = event.params.pool.toHexString()
 
   factory.poolCount = factory.poolCount + 1
   factory.save()
@@ -31,15 +17,24 @@ export function handlePoolCreated(event: PoolCreated): void {
   const symbol = generatePoolSymbol(tokens)
   const name = generatePoolName(event.params.protocolId)
 
-  const pool = new PoolEntity(event.params.pool.toHexString())
+  const pool = new PoolEntity(id)
+  
   // pool metadata
-  pool.address = event.params.pool
   pool.name = name
   pool.symbol = symbol
   pool.cfmm = event.params.cfmm
   pool.implementation = event.params.implementation
   pool.implementationID = event.params.protocolId
   pool.tokens = [tokens[0].id, tokens[1].id]
+  pool.reserves = [ZERO_BD, ZERO_BD]
+  pool.prices = [ZERO_BD, ZERO_BD]
+  // tokenVolume
+
+  // client-side usage metrics
+  pool.tvl = ZERO_BD
+  pool.volume = ZERO_BD
+  pool.feesAccrued = ZERO_BD
+  pool.borrowAPR = ZERO_BD
   
   // raw data to calculate usage metrics
   pool.lpTokenBalance = ZERO_BI
@@ -52,6 +47,7 @@ export function handlePoolCreated(event: PoolCreated): void {
   pool.createdAtBlock = event.block.number
   pool.createdAtTimestamp = event.block.timestamp
   pool.txCount = 0
+  pool.lpCount = 0
 
   // instantiate gamma pool template
   GammaPoolTemplate.create(event.params.pool)

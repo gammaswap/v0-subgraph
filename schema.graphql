@@ -157,6 +157,98 @@ type Transaction @entity {
   createdAttimestamp: BigInt!
 }
 
+type GSFactoryHourData @entity {
+  id: ID! # {factoryAddress}-hour-{timestamp}
+  factory: GSFactory!
+  date: Int!
+  totalVolumeUSD: BigDecimal!
+  totalVolumeETH: BigDecimal!
+  totalLiquidityUSD: BigDecimal!
+  totalLiquidityETH: BigDecimal!
+  totalSuppliedUSD: BigDecimal!
+  totalSuppliedETH: BigDecimal!
+  totalBorrowedUSD: BigDecimal!
+  totalBorrowedETH: BigDecimal!
+  totalCollateralUSD: BigDecimal!
+  totalCollateralETH: BigDecimal!
+  txCount: Int!
+}
+
+type GSFactoryDayData @entity {
+  id: ID! # {factoryAddress}-day-{timestamp}
+  factory: GSFactory!
+  date: Int!
+  totalVolumeUSD: BigDecimal!
+  totalVolumeETH: BigDecimal!
+  totalLiquidityUSD: BigDecimal!
+  totalLiquidityETH: BigDecimal!
+  totalSuppliedUSD: BigDecimal!
+  totalSuppliedETH: BigDecimal!
+  totalBorrowedUSD: BigDecimal!
+  totalBorrowedETH: BigDecimal!
+  totalCollateralUSD: BigDecimal!
+  totalCollateralETH: BigDecimal!
+  txCount: Int!
+}
+
+type TokenHourData @entity {
+  id: ID! # {tokenAddress}-hour-{timestamp}
+  date: Int!
+  token: Token!
+  liquidity: BigDecimal!
+  liquidityUSD: BigDecimal!
+  liquidityETH: BigDecimal!
+  volume: BigDecimal!
+  volumeUSD: BigDecimal!
+  volumeETH: BigDecimal!
+  priceUSD: BigDecimal!
+  priceETH: BigDecimal!
+  txCount: Int!
+}
+
+type TokenDayData @entity {
+  id: ID! # {tokenAddress}-day-{timestamp}
+  date: Int!
+  token: Token!
+  liquidity: BigDecimal!
+  liquidityUSD: BigDecimal!
+  liquidityETH: BigDecimal!
+  volume: BigDecimal!
+  volumeUSD: BigDecimal!
+  volumeETH: BigDecimal!
+  priceUSD: BigDecimal!
+  priceETH: BigDecimal!
+  txCount: Int!
+}
+
+type PoolHourData @entity {
+  id: ID! # {poolAddress}-hour-{timestamp}
+  date: Int!
+  pool: Pool!
+  liquidity: BigDecimal!
+  liquidityUSD: BigDecimal!
+  liquidityETH: BigDecimal!
+  volume: BigDecimal!
+  volumeUSD: BigDecimal!
+  volumeETH: BigDecimal!
+  borrowAPR: BigDecimal!
+  txCount: Int!
+}
+
+type PoolDayData @entity {
+  id: ID! # {poolAddress}-day-{timestamp}
+  date: Int!
+  pool: Pool!
+  liquidity: BigDecimal!
+  liquidityUSD: BigDecimal!
+  liquidityETH: BigDecimal!
+  volume: BigDecimal!
+  volumeUSD: BigDecimal!
+  volumeETH: BigDecimal!
+  borrowAPR: BigDecimal!
+  txCount: Int!
+}
+
 enum PoolType {
   UNISWAPV2
   BALANCER_5050

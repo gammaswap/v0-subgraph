@@ -1,8 +1,11 @@
 import { BigInt, ethereum } from '@graphprotocol/graph-ts'
-import { GSFactory as GSFactoryEntity, GSFactoryDayData, GSFactoryHourData } from '../../generated/schema'
 import { FACTORY_ADDRESS, ZERO_BD } from '../constants'
-import { HOUR_IN_SECONDS, DAY_IN_SECONDS } from '../constants/time'
+import { getDayStartDate, getHourStartDate } from './time'
 import { getOrCreateFactory } from './factory'
+import {
+  GSFactory as GSFactoryEntity,
+  GSFactoryDayData, GSFactoryHourData
+} from '../../generated/schema'
 
 export function updateFactorySnapshots(event: ethereum.Event): void {
   const gammaswap = getOrCreateFactory()
@@ -61,19 +64,9 @@ function updateFactoryHourSnapshot(event: ethereum.Event, factory: GSFactoryEnti
 
 }
 
-function getHourStartDate(timestamp: BigInt): i32 {
-  let hourIndex = timestamp.toI32() / HOUR_IN_SECONDS
-  return hourIndex * HOUR_IN_SECONDS
-}
-
 function generateFactoryHourSnapshotId(timestamp: BigInt): string {
   let startDate = getHourStartDate(timestamp)
   return FACTORY_ADDRESS.concat("-hour-").concat(BigInt.fromI32(startDate).toString())
-}
-
-function getDayStartDate(timestamp: BigInt): i32 {
-  let dayIndex = timestamp.toI32() / DAY_IN_SECONDS
-  return dayIndex * DAY_IN_SECONDS
 }
 
 function generateFactoryDaySnapshotId(timestamp: BigInt): string {

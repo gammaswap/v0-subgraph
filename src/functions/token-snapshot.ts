@@ -1,7 +1,7 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts"
 import { getOrCreateToken } from "./token"
-import { HOUR_IN_SECONDS, DAY_IN_SECONDS } from "../constants/time"
 import { ZERO_BD } from "../constants"
+import { getDayStartDate, getHourStartDate } from "./time"
 import {
   Pool as PoolEntity,
   TokenHourData as TokenHourDataEntity,
@@ -72,19 +72,9 @@ function updateTokenDaySnapshot(timestamp: BigInt, tokenAddress: string): void {
   snapshot.save()
 }
 
-function getHourStartDate(timestamp: BigInt): i32 {
-  let dayIndex = timestamp.toI32() / HOUR_IN_SECONDS
-  return dayIndex * HOUR_IN_SECONDS
-}
-
 function generateTokenHourSnapshotId(tokenAddress: string, timestamp: BigInt): string {
   let startDate = getHourStartDate(timestamp)
   return tokenAddress.concat("-hour-").concat(BigInt.fromI32(startDate).toString())
-}
-
-function getDayStartDate(timestamp: BigInt): i32 {
-  let dayIndex = timestamp.toI32() / DAY_IN_SECONDS
-  return dayIndex * DAY_IN_SECONDS
 }
 
 function generateTokenDaySnapshotId(tokenAddress: string, timestamp: BigInt): string {

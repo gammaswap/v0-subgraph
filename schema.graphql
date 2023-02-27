@@ -191,6 +191,36 @@ type GSFactoryDayData @entity {
   txCount: Int!
 }
 
+type TokenHourData @entity {
+  id: ID! # {tokenAddress}-hour-{timestamp}
+  date: Int!
+  token: Token!
+  liquidity: BigDecimal!
+  liquidityUSD: BigDecimal!
+  liquidityETH: BigDecimal!
+  volume: BigDecimal!
+  volumeUSD: BigDecimal!
+  volumeETH: BigDecimal!
+  priceUSD: BigDecimal!
+  priceETH: BigDecimal!
+  txCount: Int!
+}
+
+type TokenDayData @entity {
+  id: ID! # {tokenAddress}-day-{timestamp}
+  date: Int!
+  token: Token!
+  liquidity: BigDecimal!
+  liquidityUSD: BigDecimal!
+  liquidityETH: BigDecimal!
+  volume: BigDecimal!
+  volumeUSD: BigDecimal!
+  volumeETH: BigDecimal!
+  priceUSD: BigDecimal!
+  priceETH: BigDecimal!
+  txCount: Int!
+}
+
 enum PoolType {
   UNISWAPV2
   BALANCER_5050

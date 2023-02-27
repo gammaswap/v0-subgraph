@@ -22,6 +22,7 @@ export function updateTokenSnapshots(timestamp: BigInt, poolAddress: Address): v
 
 function updateTokenHourSnapshot(timestamp: BigInt, tokenAddress: string): void {
   let token = getOrCreateToken(tokenAddress)
+  // get token price
   let id = generateTokenHourSnapshotId(tokenAddress, timestamp)
 
   let snapshot = TokenHourDataEntity.load(id)
@@ -42,12 +43,22 @@ function updateTokenHourSnapshot(timestamp: BigInt, tokenAddress: string): void 
   }
 
   // if it exists, update the values
+  // snapshot.liquidity = token.liquidity
+  // snapshot.liquidityUSD = token.liquidityUSD
+  // snapshot.liquidityETH = token.liquidityETH
+  // snapshot.volume = snapshot.volume.plus(volume)
+  // snapshot.volumeUSD = snapshot.volumeUSD.plus(volume)
+  // snapshot.volumeETH = snapshot.volumeETH.plus(volume)
+  // snapshot.priceUSD = tokenPrice.priceUSD
+  // snapshot.priceETH = tokenPrice.priceETH
+  snapshot.txCount = snapshot.txCount + 1
 
   snapshot.save()
 }
 
 function updateTokenDaySnapshot(timestamp: BigInt, tokenAddress: string): void {
   let token = getOrCreateToken(tokenAddress)
+  // get token price
   let id = generateTokenDaySnapshotId(tokenAddress, timestamp)
 
   let snapshot = TokenDayDataEntity.load(id)
@@ -68,6 +79,15 @@ function updateTokenDaySnapshot(timestamp: BigInt, tokenAddress: string): void {
   }
 
   // if it exists, update the values
+  // snapshot.liquidity = token.liquidity
+  // snapshot.liquidityUSD = token.liquidityUSD
+  // snapshot.liquidityETH = token.liquidityETH
+  // snapshot.volume = snapshot.volume.plus(volume)
+  // snapshot.volumeUSD = snapshot.volumeUSD.plus(volume)
+  // snapshot.volumeETH = snapshot.volumeETH.plus(volume)
+  // snapshot.priceUSD = tokenPrice.priceUSD
+  // snapshot.priceETH = tokenPrice.priceETH
+  snapshot.txCount = snapshot.txCount + 1
 
   snapshot.save()
 }

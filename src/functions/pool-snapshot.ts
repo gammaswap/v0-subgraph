@@ -29,13 +29,19 @@ function updatePoolHourSnapshot(timestamp: BigInt, pool: PoolEntity): void {
     snapshot.volume = ZERO_BD
     snapshot.volumeUSD = ZERO_BD
     snapshot.volumeETH = ZERO_BD
-    snapshot.priceUSD = ZERO_BD
-    snapshot.priceETH = ZERO_BD
     snapshot.borrowAPR = ZERO_BD
     snapshot.txCount = 0
   }
 
   // if it exists, update the values
+  // snapshot.liquidity = pool.liquidity
+  // snapshot.liquidityUSD = pool.liquidityUSD
+  // snapshot.liquidityETH = pool.liquidityETH
+  // snapshot.volume = snapshot.volume.plus(volume)
+  // snapshot.volumeUSD = snapshot.volumeUSD.plus(volume)
+  // snapshot.volumeETH = snapshot.volumeETH.plus(volume)
+  // snapshot.borrowAPR = pool.borrowAPR
+  snapshot.txCount = snapshot.txCount + 1
 
   snapshot.save()
 }
@@ -55,13 +61,20 @@ function updatePoolDaySnapshot(timestamp: BigInt, pool: PoolEntity): void {
     snapshot.volume = ZERO_BD
     snapshot.volumeUSD = ZERO_BD
     snapshot.volumeETH = ZERO_BD
-    snapshot.priceUSD = ZERO_BD
-    snapshot.priceETH = ZERO_BD
     snapshot.borrowAPR = ZERO_BD
     snapshot.txCount = 0
   }
 
   // if it exists, update the values
+  // snapshot.liquidity = pool.liquidity
+  // snapshot.liquidityUSD = pool.liquidityUSD
+  // snapshot.liquidityETH = pool.liquidityETH
+  // snapshot.volume = snapshot.volume.plus(volume)
+  // snapshot.volumeUSD = snapshot.volumeUSD.plus(volume)
+  // snapshot.volumeETH = snapshot.volumeETH.plus(volume)
+  // snapshot.borrowAPR = pool.borrowAPR
+  snapshot.txCount = snapshot.txCount + 1
+
 
   snapshot.save()
 }

@@ -34,6 +34,17 @@ function updateFactoryDaySnapshot(event: ethereum.Event, factory: GSFactoryEntit
   }
 
   // if it exists, update the values
+  // snapshot.totalVolumeUSD = snapshot.totalVolumeUSD.plus(volume)
+  // snapshot.totalVolumeETH = snapshot.totalVolumeETH.plus(volume)
+  // snapshot.totalLiquidityUSD = factory.totalLiquidityUSD
+  // snapshot.totalLiquidityETH = factory.totalLiquidityETH
+  // snapshot.totalSuppliedUSD = factory.totalSuppliedUSD
+  // snapshot.totalSuppliedETH = factory.totalSuppliedETH
+  // snapshot.totalBorrowedUSD = factory.totalBorrowedUSD
+  // snapshot.totalBorrowedETH = factory.totalBorrowedETH
+  // snapshot.totalCollateralUSD = factory.totalCollateralUSD
+  // snapshot.totalCollateralETH = factory.totalCollateralETH
+  snapshot.txCount = snapshot.txCount + 1
 
   snapshot.save()
 }
@@ -59,6 +70,17 @@ function updateFactoryHourSnapshot(event: ethereum.Event, factory: GSFactoryEnti
   }
 
   // if it exists, update the values
+  // snapshot.totalVolumeUSD = snapshot.totalVolumeUSD.plus(volume)
+  // snapshot.totalVolumeETH = snapshot.totalVolumeETH.plus(volume)
+  // snapshot.totalLiquidityUSD = factory.totalLiquidityUSD
+  // snapshot.totalLiquidityETH = factory.totalLiquidityETH
+  // snapshot.totalSuppliedUSD = factory.totalSuppliedUSD
+  // snapshot.totalSuppliedETH = factory.totalSuppliedETH
+  // snapshot.totalBorrowedUSD = factory.totalBorrowedUSD
+  // snapshot.totalBorrowedETH = factory.totalBorrowedETH
+  // snapshot.totalCollateralUSD = factory.totalCollateralUSD
+  // snapshot.totalCollateralETH = factory.totalCollateralETH
+  snapshot.txCount = snapshot.txCount + 1
 
   snapshot.save()
 

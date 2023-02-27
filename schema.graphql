@@ -231,8 +231,6 @@ type PoolHourData @entity {
   volume: BigDecimal!
   volumeUSD: BigDecimal!
   volumeETH: BigDecimal!
-  priceETH: BigDecimal!
-  priceUSD: BigDecimal!
   borrowAPR: BigDecimal!
   txCount: Int!
 }
@@ -247,8 +245,6 @@ type PoolDayData @entity {
   volume: BigDecimal!
   volumeUSD: BigDecimal!
   volumeETH: BigDecimal!
-  priceETH: BigDecimal!
-  priceUSD: BigDecimal!
   borrowAPR: BigDecimal!
   txCount: Int!
 }

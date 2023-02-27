@@ -221,6 +221,38 @@ type TokenDayData @entity {
   txCount: Int!
 }
 
+type PoolHourData @entity {
+  id: ID! # {poolAddress}-hour-{timestamp}
+  date: Int!
+  pool: Pool!
+  liquidity: BigDecimal!
+  liquidityUSD: BigDecimal!
+  liquidityETH: BigDecimal!
+  volume: BigDecimal!
+  volumeUSD: BigDecimal!
+  volumeETH: BigDecimal!
+  priceETH: BigDecimal!
+  priceUSD: BigDecimal!
+  borrowAPR: BigDecimal!
+  txCount: Int!
+}
+
+type PoolDayData @entity {
+  id: ID! # {poolAddress}-day-{timestamp}
+  date: Int!
+  pool: Pool!
+  liquidity: BigDecimal!
+  liquidityUSD: BigDecimal!
+  liquidityETH: BigDecimal!
+  volume: BigDecimal!
+  volumeUSD: BigDecimal!
+  volumeETH: BigDecimal!
+  priceETH: BigDecimal!
+  priceUSD: BigDecimal!
+  borrowAPR: BigDecimal!
+  txCount: Int!
+}
+
 enum PoolType {
   UNISWAPV2
   BALANCER_5050

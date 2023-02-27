@@ -7,6 +7,7 @@ import { createLiquidityPositionSnapshot } from '../functions/liquidity-position
 import { getOrCreateUser } from '../functions/user'
 import { updateFactorySnapshots } from '../functions/factory-snapshot'
 import { updateTokenSnapshots } from '../functions/token-snapshot'
+import { updatePoolSnapshots } from '../functions/pool-snapshot'
 
 export function onDeposit(event: DepositEvent): void {
   let deposit = handleDeposit(event)
@@ -16,7 +17,7 @@ export function onDeposit(event: DepositEvent): void {
     updateFactorySnapshots(event)
     createLiquidityPositionSnapshot(position, event.block)
     updateTokenSnapshots(event.block.timestamp, event.address)
-    // updatePoolSnapshots(event.block.timestamp, event.address)
+    updatePoolSnapshots(event.block.timestamp, event.address)
   }
 }
 

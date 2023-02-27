@@ -157,6 +157,40 @@ type Transaction @entity {
   createdAttimestamp: BigInt!
 }
 
+type GSFactoryHourData @entity {
+  id: ID! # {factoryAddress}-hour-{timestamp}
+  factory: GSFactory!
+  date: Int!
+  totalVolumeUSD: BigDecimal!
+  totalVolumeETH: BigDecimal!
+  totalLiquidityUSD: BigDecimal!
+  totalLiquidityETH: BigDecimal!
+  totalSuppliedUSD: BigDecimal!
+  totalSuppliedETH: BigDecimal!
+  totalBorrowedUSD: BigDecimal!
+  totalBorrowedETH: BigDecimal!
+  totalCollateralUSD: BigDecimal!
+  totalCollateralETH: BigDecimal!
+  txCount: Int!
+}
+
+type GSFactoryDayData @entity {
+  id: ID! # {factoryAddress}-day-{timestamp}
+  factory: GSFactory!
+  date: Int!
+  totalVolumeUSD: BigDecimal!
+  totalVolumeETH: BigDecimal!
+  totalLiquidityUSD: BigDecimal!
+  totalLiquidityETH: BigDecimal!
+  totalSuppliedUSD: BigDecimal!
+  totalSuppliedETH: BigDecimal!
+  totalBorrowedUSD: BigDecimal!
+  totalBorrowedETH: BigDecimal!
+  totalCollateralUSD: BigDecimal!
+  totalCollateralETH: BigDecimal!
+  txCount: Int!
+}
+
 enum PoolType {
   UNISWAPV2
   BALANCER_5050

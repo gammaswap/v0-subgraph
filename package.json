@@ -11,14 +11,19 @@
     "deploy": "graph deploy GammaSwap --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
     "deploy-local": "graph deploy GammaSwap --ipfs http://127.0.0.1:5001 --node http://127.0.0.1:8020",
     "remove-local": "graph remove --node http://127.0.0.1:8020/ GammaSwap",
+    "lint": "yarn eslint src/* --ext ts",
     "test": "graph test"
   },
-  "dependencies": {
-    "@graphprotocol/graph-cli": "0.33.0",
-    "@graphprotocol/graph-ts": "0.27.0"
-  },
   "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.42.3",
+    "@graphprotocol/graph-ts": "^0.29.3",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.35.0",
+    "eslint-config-prettier": "^8.6.0",
     "matchstick-as": "0.5.0",
-    "mustache": "^4.2.0"
+    "mustache": "^4.2.0",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5"
   }
 }

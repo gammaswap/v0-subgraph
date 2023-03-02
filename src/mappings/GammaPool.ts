@@ -1,4 +1,4 @@
-import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPoolFactory/GammaPool'
+// import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPoolFactory/GammaPool'
 import { Deposit as DepositEvent, Transfer as TransferEvent } from '../../generated/templates/GammaPool/GammaPool'
 import { handleDeposit } from '../deposit'
 import { createLiquidityPositions, handleTransfer } from '../transfer'
@@ -10,10 +10,10 @@ import { updateTokenSnapshots } from '../functions/token-snapshot'
 import { updatePoolSnapshots } from '../functions/pool-snapshot'
 
 export function onDeposit(event: DepositEvent): void {
-  let deposit = handleDeposit(event)
+  const deposit = handleDeposit(event)
   if (deposit !== null) {    
     // handle creation and update of user's liquidity position & snapshot
-    let position = getOrCreateLiquidityPosition(event.params.to, event.address, event.block)
+    const position = getOrCreateLiquidityPosition(event.params.to, event.address, event.block)
     updateFactorySnapshots(event)
     createLiquidityPositionSnapshot(position, event.block)
     updateTokenSnapshots(event.block.timestamp, event.address)
@@ -28,9 +28,9 @@ export function onTransfer(event: TransferEvent): void {
   createLiquidityPositions(event)
 }
 
-export function handlePoolUpdated(event: PoolUpdated): void {}
-export function handleLoanCreated(event: LoanCreated): void {}
-export function handleLoanUpdated(event: LoanUpdated): void {}
+// export function handlePoolUpdated(event: PoolUpdated): void {}
+// export function handleLoanCreated(event: LoanCreated): void {}
+// export function handleLoanUpdated(event: LoanUpdated): void {}
 
 
 

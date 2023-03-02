@@ -6,16 +6,16 @@ import {
 } from "../../generated/schema"
 
 export function getOrCreateLiquidityPosition(user: Address, pool: Address, block: ethereum.Block): LiquidityPositionEntity {
-  let userAddress = user.toHexString()
-  let poolId = pool.toHexString()
+  const userAddress = user.toHexString()
+  const poolId = pool.toHexString()
 
   // add position type?
-  let id = poolId.concat("-").concat(userAddress)
+  const id = poolId.concat("-").concat(userAddress)
   
   let position = LiquidityPositionEntity.load(id)
   
   if (position === null) {
-    let pool = PoolEntity.load(poolId) as PoolEntity
+    const pool = PoolEntity.load(poolId) as PoolEntity
     pool.lpCount = pool.lpCount + 1
     position = new LiquidityPositionEntity(id)
     position.user = userAddress

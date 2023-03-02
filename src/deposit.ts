@@ -9,19 +9,19 @@ import {
 } from "../generated/schema"
 
 export function handleDeposit(event: DepositEvent): DepositEntity | null {
-  let transaction = TransactionEntity.load(event.transaction.hash.toHexString())
+  const transaction = TransactionEntity.load(event.transaction.hash.toHexString())
   if (transaction == null) return null
   
-  let deposits = transaction.deposits
-  let deposit = DepositEntity.load(deposits[deposits.length - 1]) as DepositEntity
+  const deposits = transaction.deposits
+  const deposit = DepositEntity.load(deposits[deposits.length - 1]) as DepositEntity
   deposit.caller = event.params.caller
  
   const pool = PoolEntity.load(event.address.toHexString()) as PoolEntity
   const gammaswap = GSFactoryEntity.load(FACTORY_ADDRESS) as GSFactoryEntity
 
   // update token balances and data
-  let token0 = getOrCreateToken(pool.tokens[0])
-  let token1 = getOrCreateToken(pool.tokens[1])
+  const token0 = getOrCreateToken(pool.tokens[0])
+  const token1 = getOrCreateToken(pool.tokens[1])
 
 
   // update txn counts

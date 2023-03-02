@@ -6,8 +6,8 @@ import { getPoolTokens, generatePoolSymbol, generatePoolName } from "../function
 import { getOrCreateFactory } from '../functions/factory'
 
 export function handlePoolCreated(event: PoolCreated): void {
-  let factory = getOrCreateFactory()
-  let id = event.params.pool.toHexString()
+  const factory = getOrCreateFactory()
+  const id = event.params.pool.toHexString()
 
   factory.poolCount = factory.poolCount + 1
   factory.save()

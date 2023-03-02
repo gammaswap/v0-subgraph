@@ -2,7 +2,7 @@ import { TokenPrice } from "../../generated/schema"
 import { ZERO_BD } from "../constants"
 
 export function createTokenPrice(address: string): TokenPrice {
-  let price = new TokenPrice(address)
+  const price = new TokenPrice(address)
   price.token = address
   price.derivedNative = ZERO_BD
   price.lastPriceUSD = ZERO_BD

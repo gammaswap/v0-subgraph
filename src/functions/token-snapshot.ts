@@ -9,11 +9,11 @@ import {
 } from "../../generated/schema"
 
 export function updateTokenSnapshots(timestamp: BigInt, poolAddress: Address): void {
-  let pool = PoolEntity.load(poolAddress.toHexString()) as PoolEntity
-  let tokenLength = pool.tokens.length
+  const pool = PoolEntity.load(poolAddress.toHexString()) as PoolEntity
+  const tokenLength = pool.tokens.length
 
   for (let i: i32 = 0; i < tokenLength; i++) {
-    let token = pool.tokens[i]
+    const token = pool.tokens[i]
 
     updateTokenHourSnapshot(timestamp, token)
     updateTokenDaySnapshot(timestamp, token)
@@ -21,9 +21,9 @@ export function updateTokenSnapshots(timestamp: BigInt, poolAddress: Address): v
 }
 
 function updateTokenHourSnapshot(timestamp: BigInt, tokenAddress: string): void {
-  let token = getOrCreateToken(tokenAddress)
+  const token = getOrCreateToken(tokenAddress)
   // get token price
-  let id = generateTokenHourSnapshotId(tokenAddress, timestamp)
+  const id = generateTokenHourSnapshotId(tokenAddress, timestamp)
 
   let snapshot = TokenHourDataEntity.load(id)
 
@@ -57,9 +57,9 @@ function updateTokenHourSnapshot(timestamp: BigInt, tokenAddress: string): void 
 }
 
 function updateTokenDaySnapshot(timestamp: BigInt, tokenAddress: string): void {
-  let token = getOrCreateToken(tokenAddress)
+  const token = getOrCreateToken(tokenAddress)
   // get token price
-  let id = generateTokenDaySnapshotId(tokenAddress, timestamp)
+  const id = generateTokenDaySnapshotId(tokenAddress, timestamp)
 
   let snapshot = TokenDayDataEntity.load(id)
 
@@ -93,11 +93,11 @@ function updateTokenDaySnapshot(timestamp: BigInt, tokenAddress: string): void {
 }
 
 function generateTokenHourSnapshotId(tokenAddress: string, timestamp: BigInt): string {
-  let startDate = getHourStartDate(timestamp)
+  const startDate = getHourStartDate(timestamp)
   return tokenAddress.concat("-hour-").concat(BigInt.fromI32(startDate).toString())
 }
 
 function generateTokenDaySnapshotId(tokenAddress: string, timestamp: BigInt): string {
-  let startDate = getDayStartDate(timestamp)
+  const startDate = getDayStartDate(timestamp)
   return tokenAddress.concat("-day-").concat(BigInt.fromI32(startDate).toString())
 }

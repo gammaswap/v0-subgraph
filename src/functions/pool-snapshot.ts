@@ -8,14 +8,14 @@ import {
 } from "../../generated/schema"
 
 export function updatePoolSnapshots(timestamp: BigInt, poolAddress: Address): void {
-  let pool = PoolEntity.load(poolAddress.toHexString()) as PoolEntity
+  const pool = PoolEntity.load(poolAddress.toHexString()) as PoolEntity
 
   updatePoolHourSnapshot(timestamp, pool)
   updatePoolDaySnapshot(timestamp, pool)
 }
 
 function updatePoolHourSnapshot(timestamp: BigInt, pool: PoolEntity): void {
-  let id = generatePoolHourSnapshotId(pool.id, timestamp)
+  const id = generatePoolHourSnapshotId(pool.id, timestamp)
 
   let snapshot = PoolHourDataEntity.load(id)
 
@@ -47,7 +47,7 @@ function updatePoolHourSnapshot(timestamp: BigInt, pool: PoolEntity): void {
 }
 
 function updatePoolDaySnapshot(timestamp: BigInt, pool: PoolEntity): void {
-  let id = generatePoolDaySnapshotId(pool.id, timestamp)
+  const id = generatePoolDaySnapshotId(pool.id, timestamp)
 
   let snapshot = PoolDayDataEntity.load(id)
 
@@ -80,11 +80,11 @@ function updatePoolDaySnapshot(timestamp: BigInt, pool: PoolEntity): void {
 }
 
 function generatePoolHourSnapshotId(poolAddress: string, timestamp: BigInt): string {
-  let startDate = getHourStartDate(timestamp)
+  const startDate = getHourStartDate(timestamp)
   return poolAddress.concat("-hour-").concat(BigInt.fromI32(startDate).toString())
 }
 
 function generatePoolDaySnapshotId(poolAddress: string, timestamp: BigInt): string {
-  let startDate = getDayStartDate(timestamp)
+  const startDate = getDayStartDate(timestamp)
   return poolAddress.concat("-day-").concat(BigInt.fromI32(startDate).toString())
 }

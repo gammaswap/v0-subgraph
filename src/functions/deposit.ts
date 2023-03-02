@@ -5,7 +5,7 @@ import { BigInt } from "@graphprotocol/graph-ts"
 import { ADDRESS_ZERO } from "../constants"
 
 export function getOrCreateDeposit(event: TransferEvent, depositCount: i32): DepositEntity {
-  let depositId = event.transaction.hash.toHexString()
+  const depositId = event.transaction.hash.toHexString()
   .concat("-")
   .concat(BigInt.fromI32(depositCount).toString())
 

@@ -5,13 +5,13 @@ import {
 } from "../../generated/schema"
 
 export function createLiquidityPositionSnapshot(position: LiquidityPositionEntity, block: ethereum.Block): void {
-  let timestamp = block.timestamp.toI32()
+  const timestamp = block.timestamp.toI32()
 
-  let id = position.id
+  const id = position.id
   .concat("-")
   .concat(timestamp.toString())
 
-  let snapshot = new LiquidityPositionSnapshotEntity(id)
+  const snapshot = new LiquidityPositionSnapshotEntity(id)
   snapshot.user = position.user
   snapshot.pool = position.pool
   snapshot.position = position.id

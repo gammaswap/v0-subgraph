@@ -1,4 +1,4 @@
-import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPoolFactory/GammaPool'
+// import { LoanUpdated, PoolUpdated, LoanCreated } from '../../generated/GammaPoolFactory/GammaPool'
 import { Deposit as DepositEvent, Transfer as TransferEvent } from '../../generated/templates/GammaPool/GammaPool'
 import { handleDeposit } from '../deposit'
 import { createLiquidityPositions, handleTransfer } from '../transfer'
@@ -28,9 +28,9 @@ export function onTransfer(event: TransferEvent): void {
   createLiquidityPositions(event)
 }
 
-export function handlePoolUpdated(event: PoolUpdated): void {}
-export function handleLoanCreated(event: LoanCreated): void {}
-export function handleLoanUpdated(event: LoanUpdated): void {}
+// export function handlePoolUpdated(event: PoolUpdated): void {}
+// export function handleLoanCreated(event: LoanCreated): void {}
+// export function handleLoanUpdated(event: LoanUpdated): void {}
 
 
 

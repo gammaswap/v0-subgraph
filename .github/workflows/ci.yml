@@ -22,6 +22,8 @@ jobs:
           node-version: 14
       - name: Install dependencies
         run: yarn --frozen-lockfile
+      - name: Install graph-cli
+        run: yarn global add @graphprotocol/graph-cli
       - name: Codegen
         run: graph codegen
       - name: Build

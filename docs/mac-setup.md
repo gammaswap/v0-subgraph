@@ -65,7 +65,7 @@ In my case, my database was *gammaswap-graph-node* and I’m pushing this to my 
 - clone the v1-subgraph repo, and adjust the deployed contract addresses from 1.1 in `config/<NETWORK_NAME>.json`.
 - install the dependencies and generate contract ABI types for the mappings later, like so:
 ```bash
-yarn codegen && yarn build
+yarn prepare && yarn codegen && yarn build
 ```
 This also generates a `subgraph.yaml` file, which renders in the variables based on yarn command you chose. (Not implemented fully)
 

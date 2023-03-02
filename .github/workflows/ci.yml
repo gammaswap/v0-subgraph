@@ -22,8 +22,8 @@ jobs:
           node-version: 14
       - name: Install dependencies
         run: yarn --frozen-lockfile
-      # - name: Codegen
-      #   run: graph codegen
+      - name: Codegen
+        run: yarn codegen
       - name: Build
         run: yarn build
   

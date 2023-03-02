@@ -14,7 +14,7 @@ export function updateFactorySnapshots(event: ethereum.Event): void {
 }
 
 function updateFactoryDaySnapshot(event: ethereum.Event, factory: GSFactoryEntity): void {
-  let id = generateFactoryDaySnapshotId(event.block.timestamp)
+  const id = generateFactoryDaySnapshotId(event.block.timestamp)
   let snapshot = GSFactoryDayData.load(id)
   if (snapshot === null) {
     snapshot = new GSFactoryDayData(id)
@@ -50,7 +50,7 @@ function updateFactoryDaySnapshot(event: ethereum.Event, factory: GSFactoryEntit
 }
 
 function updateFactoryHourSnapshot(event: ethereum.Event, factory: GSFactoryEntity): void {
-  let id = generateFactoryHourSnapshotId(event.block.timestamp)
+  const id = generateFactoryHourSnapshotId(event.block.timestamp)
   let snapshot = GSFactoryHourData.load(id)
   if (snapshot === null) {
     snapshot = new GSFactoryHourData(id)
@@ -87,11 +87,11 @@ function updateFactoryHourSnapshot(event: ethereum.Event, factory: GSFactoryEnti
 }
 
 function generateFactoryHourSnapshotId(timestamp: BigInt): string {
-  let startDate = getHourStartDate(timestamp)
+  const startDate = getHourStartDate(timestamp)
   return FACTORY_ADDRESS.concat("-hour-").concat(BigInt.fromI32(startDate).toString())
 }
 
 function generateFactoryDaySnapshotId(timestamp: BigInt): string {
-  let startDate = getDayStartDate(timestamp)
+  const startDate = getDayStartDate(timestamp)
   return FACTORY_ADDRESS.concat("-day-").concat(BigInt.fromI32(startDate).toString())
 }

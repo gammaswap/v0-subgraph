@@ -24,7 +24,7 @@ export function handleTransfer(event: TransferEvent): void {
   if (isInitialTransfer(event)) return
 
   // get or create transaction
-  let transaction = getOrCreateTransaction(event)
+  const transaction = getOrCreateTransaction(event)
   const deposits = transaction.deposits
 
   // check if transfer event is a deposit
@@ -33,7 +33,7 @@ export function handleTransfer(event: TransferEvent): void {
     // check if deposit completed and transaction deposit len is 0 before doing the above
     log.warning("Deposit detected by {} of {} units", [event.params.to.toHexString(), event.params.amount.toString()])
     if (transaction.deposits.length === 0 || isCompleteDeposit(deposits[deposits.length - 1])) {
-      let deposit = getOrCreateDeposit(event, deposits.length)
+      const deposit = getOrCreateDeposit(event, deposits.length)
       deposit.transaction = transaction.id
       transaction.deposits = deposits.concat([deposit.id])
 

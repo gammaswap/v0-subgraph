@@ -1,14 +1,14 @@
 import { PoolCreated as PoolCreatedEvent } from "../../generated/GammaPoolFactory/GammaPoolFactory"
-import { Token as TokenEntity, Pool as PoolEntity } from "../../generated/schema"
+import { Token as TokenEntity } from "../../generated/schema"
 import { getOrCreateToken } from "../functions/token"
 import { PoolType } from "../constants"
 
 export function getPoolTokens(event: PoolCreatedEvent): TokenEntity[] {
-  let tokenLength = event.params.tokens.length
-  let tokens = [] as TokenEntity[]
+  const tokenLength = event.params.tokens.length
+  const tokens = [] as TokenEntity[]
 
   for (let i: i32 = 0; i < tokenLength; i++) {
-    let token = getOrCreateToken(event.params.tokens[i].toHexString())
+    const token = getOrCreateToken(event.params.tokens[i].toHexString())
     tokens.push(token)
   }
 

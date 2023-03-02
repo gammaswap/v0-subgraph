@@ -10,10 +10,10 @@ import { updateTokenSnapshots } from '../functions/token-snapshot'
 import { updatePoolSnapshots } from '../functions/pool-snapshot'
 
 export function onDeposit(event: DepositEvent): void {
-  let deposit = handleDeposit(event)
+  const deposit = handleDeposit(event)
   if (deposit !== null) {    
     // handle creation and update of user's liquidity position & snapshot
-    let position = getOrCreateLiquidityPosition(event.params.to, event.address, event.block)
+    const position = getOrCreateLiquidityPosition(event.params.to, event.address, event.block)
     updateFactorySnapshots(event)
     createLiquidityPositionSnapshot(position, event.block)
     updateTokenSnapshots(event.block.timestamp, event.address)

@@ -26,17 +26,17 @@ export const ADDRESS_ZERO = Address.fromString('0x000000000000000000000000000000
 export const UNISWAPV2_ADDRESS = '0x3c0E70d7eD3E5e35C53d950B28E9723619dAd0A4'
 export const FACTORY_ADDRESS = '0x85160543dF20A7b02F39baEc075Bc9842Ac41592'
 
-export let ZERO_BI = BigInt.fromI32(0)
-export let ONE_BI = BigInt.fromI32(1)
-export let ONE_BD = BigDecimal.fromString('1')
-export let TEN_BI = BigInt.fromI32(10)
-export let TEN_BD = BigDecimal.fromString('10')
-export let SIX_BI = BigInt.fromI32(6)
-export let SIX_BD = BigDecimal.fromString('6')
-export let ZERO_BD = BigDecimal.fromString('0')
-export let BI_18 = BigInt.fromI32(18)
+export const ZERO_BI = BigInt.fromI32(0)
+export const ONE_BI = BigInt.fromI32(1)
+export const ONE_BD = BigDecimal.fromString('1')
+export const TEN_BI = BigInt.fromI32(10)
+export const TEN_BD = BigDecimal.fromString('10')
+export const SIX_BI = BigInt.fromI32(6)
+export const SIX_BD = BigDecimal.fromString('6')
+export const ZERO_BD = BigDecimal.fromString('0')
+export const BI_18 = BigInt.fromI32(18)
 
-export let TOKEN_MAP = new TypedMap<Address, string[]>()
+export const TOKEN_MAP = new TypedMap<Address, string[]>()
 TOKEN_MAP.set(Address.fromString("0xf14E85836e0BD30a87262b66a30F1f8AfF231207"), ["USD Coin", "USDC"])
 TOKEN_MAP.set(Address.fromString("0x8604843aE2afDA0CfaB229B630582400bDD20AaD"), ["Wrapped Ether", "WETH"])
 TOKEN_MAP.set(Address.fromString("0x0BFd518992Fa02daF9F46d20aD0bBb811A92507b"), ["Dai", "DAI"])

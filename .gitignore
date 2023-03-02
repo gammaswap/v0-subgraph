@@ -9,6 +9,7 @@ lerna-debug.log*
 # generated files using yarn codegen
 build/
 generated/
+subgraph.yaml
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json

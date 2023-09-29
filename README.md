@@ -1,4 +1,4 @@
-# V1-Subgraph
+# V0-Subgraph
 
 Using The Graph to index a user’s borrowed and lent positions. This requires setting up a hardhat node against a local graph node to query all GammaSwap contract events by user.
 
